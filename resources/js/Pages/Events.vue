@@ -673,7 +673,16 @@ export default {
         async getEvents(){
             try {
                 // const response = await axios.get('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
-                const response = await axios.get('api/events', {filter: this.filter, sort:this.sort, filter_date: this.filter_date});
+                const response = await axios.get('api/events',
+                {
+                    headers: {},
+                    data: {
+                        "filter": this.filter,
+                        "sort": this.sort,
+                        "filter_date": this.filter_date,
+                    }
+                }
+                );
                 this.events = response.data;
                 this.totalPage = response.data.length;
                 this.currentPage = 1;
