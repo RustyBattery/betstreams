@@ -755,6 +755,8 @@ export default {
         }else {
             this.is_admin = true;
         }
+        console.log('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
+        console.log('debug');
         this.getEvents();
     }
 }
