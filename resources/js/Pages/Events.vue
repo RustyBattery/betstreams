@@ -672,8 +672,8 @@ export default {
 
         async getEvents(){
             try {
-                axios.defaults.headers.common['Accept'] = 'application/json';
-                axios.defaults.headers.common['Content-Type'] = 'application/json';
+                // axios.defaults.headers.common['Accept'] = 'application/json';
+                axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
                 const url = 'api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date;
                 console.log(url);
                 const response = await axios.get(url);
