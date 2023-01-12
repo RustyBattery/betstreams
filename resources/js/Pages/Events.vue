@@ -674,7 +674,8 @@ export default {
             try {
                 const url = 'api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date;
                 console.log(url);
-                const response = await axios.get(url);
+                // const response = await axios.get(url);
+                const response = await axios.get('api/events', { params: { filter: this.filter, sort: this.sort, filter_date:this.filter_date });
                 // const response = await axios.get('api/events',
                 // {
                 //     headers: {},
