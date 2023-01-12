@@ -740,7 +740,6 @@ export default {
         let search = window.location.search;
         if(search){
             search = search.split('&');
-            console.log(search);
             let filter = search[0].split('=')[1];
             let sort = search[1].split('=')[1];
             let filter_date = search[2].split('=')[1];
