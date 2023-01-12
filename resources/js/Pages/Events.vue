@@ -674,7 +674,15 @@ export default {
             console.log('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
             console.log('debug');
             try {
-                const response = axios.get('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
+                // const response = axios.get('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
+                const response = axios.get('api/events', {
+                    headers: {},
+                    data: {
+                        filter: this.filter,
+                        sort: this.sort,
+                        filter_date: this.filter_date
+                    }
+                });
                 this.events = response.data;
                 console.log(response);
                 this.totalPage = response.data.length;
