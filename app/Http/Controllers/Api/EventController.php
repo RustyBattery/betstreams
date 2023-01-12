@@ -23,7 +23,7 @@ class EventController extends BaseController
             'filter_date' => ['nullable', 'date'],
         ]);
         $user = auth('sanctum')->user();
-
+        return $request;
         if(!isset($data['filter'])){
             $data['filter']='All';
         }

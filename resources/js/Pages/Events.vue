@@ -676,6 +676,7 @@ export default {
                 console.log(url);
                 // const response = await axios.get(url);
                 const response = await axios.get('api/events', { params: { filter: this.filter, sort: this.sort, filter_date:this.filter_date }});
+                console.log(response);
                 // const response = await axios.get('api/events',
                 // {
                 //     headers: {},
