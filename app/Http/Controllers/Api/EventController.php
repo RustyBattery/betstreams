@@ -27,6 +27,9 @@ class EventController extends BaseController
         if(!isset($data['filter'])){
             $data['filter']='All';
         }
+        if(!isset($data['sort'])){
+            $data['sort']='date';
+        }
 
         if($data['filter'] == 'New'){
             $events = Event::query()->join('sports', 'sports.id', '=', 'events.sport_id')->leftJoin('user_events', function ($join) {
