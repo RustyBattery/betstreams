@@ -676,7 +676,9 @@ export default {
             try {
                 // const response = axios.get('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
                 const response = axios.get('api/events', {
-                    headers: {},
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     data: {
                         filter: this.filter,
                         sort: this.sort,
