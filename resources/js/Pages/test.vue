@@ -1,9 +1,11 @@
 <template>
-    <div class="">meow</div>
+        <h1>main content</h1>
 </template>
 
 <script>
-</script>
+import Layout from '@/Components/Layout.vue'
 
-<style>
-</style>
+export default {
+    layout: Layout,
+}
+</script>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,4 +18,16 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-Route::inertia('/', 'test');
+Route::inertia('/login', 'Login')->name('login');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/', function (){
+        return Inertia::render('Events', ['authUser'=> auth('sanctum')->user()]);
+    });
+    Route::get('/profile', function (){
+        return Inertia::render('Profile', ['authUser'=> auth('sanctum')->user()]);
+    });
+    Route::get('/users', function (){
+        return Inertia::render('Users', ['authUser'=> auth('sanctum')->user()]);
+    });
+});

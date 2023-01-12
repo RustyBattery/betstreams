@@ -3,7 +3,11 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Sport;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,11 +18,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        User::query()->create(['name'=>'client', 'username'=>'client', 'role'=>'client', 'password'=>Hash::make('client')]);
+        User::query()->create(['name'=>'user', 'username'=>'user', 'role'=>'user', 'password'=>Hash::make('user')]);
+        User::query()->create(['name'=>'admin', 'username'=>'admin', 'role'=>'admin', 'password'=>Hash::make('admin')]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $sports = [
+            "Football",
+            "Hockey",
+            "Table tennis",
+            "Tennis",
+            "Padel tennis",
+            "Basketball",
+            "Volleyball",
+            "Esports",
+            "American Football",
+            "Handball",
+            "Winter sports",
+            "Darts",
+            "Rugby",
+            "Snooker",
+            "Floorball",
+            "Futsal",
+            "Bandy",
+            "Beach volleyball",
+            "Badminton",
+            "Beach soccer",
+            "Other"
+        ];
+
+        foreach ($sports as $sport){
+            Sport::query()->create(['name'=>$sport]);
+        }
+
     }
 }

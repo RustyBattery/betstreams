@@ -3,17 +3,27 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::get('/sports', [\App\Http\Controllers\Api\EventController::class, 'get_sports']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+//Route::group(['middleware' => 'auth:sanctum'], function(){
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::prefix('/events')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\EventController::class, 'index']);
+        Route::post('/add', [\App\Http\Controllers\Api\EventController::class, 'create']);
+        Route::post('/edit', [\App\Http\Controllers\Api\EventController::class, 'update']);
+        Route::delete('/delete', [\App\Http\Controllers\Api\EventController::class, 'delete']);
+        Route::post('/client/edit', [\App\Http\Controllers\Api\EventController::class, 'edit_client']);
+        Route::get('/comments', [\App\Http\Controllers\Api\EventController::class, 'get_comments']);
+        Route::get('/new', [\App\Http\Controllers\Api\EventController::class, 'check_new']);
+    });
+    Route::prefix('/users')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\UserController::class, 'index']);
+        Route::get('/profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);
+        Route::post('/add', [\App\Http\Controllers\Api\UserController::class, 'create']);
+        Route::post('/edit', [\App\Http\Controllers\Api\UserController::class, 'update']);
+        Route::delete('/delete', [\App\Http\Controllers\Api\UserController::class, 'delete']);
+        Route::get('/ip', [\App\Http\Controllers\Api\UserController::class, 'get_ip_addresses']);
+        Route::post('/ip', [\App\Http\Controllers\Api\UserController::class, 'update_or_create_ip_addresses']);
+        Route::delete('/ip', [\App\Http\Controllers\Api\UserController::class, 'delete_ip_addresses']);
+    });
 });
