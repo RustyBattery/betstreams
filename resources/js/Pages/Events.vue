@@ -671,10 +671,9 @@ export default {
         },
 
         async getEvents(){
-            console.log('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
-            console.log('debug');
             try {
-                const response = await axios.get('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
+                // const response = await axios.get('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
+                const response = await axios.get('api/events', {filter: this.filter, sort:this.sort, filter_date: this.filter_date});
                 this.events = response.data;
                 console.log(response);
                 this.totalPage = response.data.length;
@@ -705,13 +704,11 @@ export default {
             }
         },
         async deleteEvent(stream){
-            console.log('hehehe');
             if(confirm("Are you sure?")){
                 try {
                     const response = await axios.delete('api/events/delete'+'?id='+stream.id);
                     this.getEvents();
                 }catch (e){
-                    console.log('hehehe');
                     console.log(e);
                 }
             }
@@ -757,8 +754,6 @@ export default {
         }else {
             this.is_admin = true;
         }
-        console.log('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
-        console.log('debug');
         this.getEvents();
     }
 }
