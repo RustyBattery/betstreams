@@ -705,6 +705,7 @@ export default {
             }
         },
         async deleteEvent(stream){
+            console.log('hehehe');
             if(confirm("Are you sure?")){
                 try {
                     const response = await axios.delete('api/events/delete'+'?id='+stream.id);
