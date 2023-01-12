@@ -673,6 +673,7 @@ export default {
         async getEvents(){
             try {
                 console.log('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
+                console.log('debug');
                 const response = await axios.get('api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date);
                 this.events = response.data;
                 console.log(response);
