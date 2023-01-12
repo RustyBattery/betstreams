@@ -676,7 +676,7 @@ export default {
                 // axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
                 const url = 'api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date;
                 console.log(url, {headers:{'content-type': 'application/x-www-form-urlencoded'}});
-                const response = await axios.get(url);
+                const response = await axios.get(url, {headers:{'content-type': 'application/x-www-form-urlencoded'}});
                 // const response = await axios.get('api/events', { params: { filter: this.filter, sort: this.sort, filter_date:this.filter_date }});
                 console.log(response);
                 // const response = await axios.get('api/events',
