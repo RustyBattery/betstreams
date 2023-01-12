@@ -1,6 +1,6 @@
 FROM php:8.0-fpm
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update &&  -y \
       apt-utils \
       libpq-dev \
       libpng-dev \
@@ -14,9 +14,8 @@ RUN apt-get update && apt-get install -y \
       apt-get clean && \
       rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN apk add --no-cache \
-    nodejs \
-    npm \
+RUN  apt install nodejs
+RUN  apt install npm
 
 COPY ./_docker/app/php.ini /usr/local/etc/php/conf.d/php.ini
 
