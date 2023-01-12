@@ -711,6 +711,7 @@ export default {
                     const response = await axios.delete('api/events/delete'+'?id='+stream.id);
                     this.getEvents();
                 }catch (e){
+                    console.log('hehehe');
                     console.log(e);
                 }
             }
