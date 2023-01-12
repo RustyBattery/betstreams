@@ -672,10 +672,12 @@ export default {
 
         async getEvents(){
             try {
+                axios.defaults.headers.common['Accept'] = 'application/json';
+                axios.defaults.headers.common['Content-Type'] = 'application/json';
                 const url = 'api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date;
                 console.log(url);
-                // const response = await axios.get(url);
-                const response = await axios.get('api/events', { params: { filter: this.filter, sort: this.sort, filter_date:this.filter_date }});
+                const response = await axios.get(url);
+                // const response = await axios.get('api/events', { params: { filter: this.filter, sort: this.sort, filter_date:this.filter_date }});
                 console.log(response);
                 // const response = await axios.get('api/events',
                 // {
