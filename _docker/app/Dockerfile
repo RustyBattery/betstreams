@@ -1,6 +1,6 @@
 FROM php:8.0-fpm
 
-RUN apt-get update &&  -y \
+RUN apt-get update && apt-get install -y \
       apt-utils \
       libpq-dev \
       libpng-dev \
