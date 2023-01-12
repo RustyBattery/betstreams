@@ -24,7 +24,7 @@ class EventController extends BaseController
         ]);
         $user = auth('sanctum')->user();
 
-        if($data['filter'] == 'New'){
+        if(isset($data['filter']) && $data['filter'] == 'New'){
             $events = Event::query()->join('sports', 'sports.id', '=', 'events.sport_id')->leftJoin('user_events', function ($join) {
                 $join->on('events.id', '=', 'user_events.event_id');
             })->orderBy($data['sort'])->select(
@@ -81,7 +81,7 @@ class EventController extends BaseController
             return $events;
         }
 
-        if($data['filter'] == 'Trashcan'){
+        if(isset($data['filter']) && $data['filter'] == 'Trashcan'){
             $events = Event::query()->join('sports', 'sports.id', '=', 'events.sport_id')->leftJoin('user_events', function ($join) {
                 $join->on('events.id', '=', 'user_events.event_id');
             })->orderBy($data['sort'])->where('user_events.user_id', $user->id)->whereNotNull('user_events.trashcan')->select(
@@ -115,7 +115,7 @@ class EventController extends BaseController
             return $events;
         }
 
-        if($data['filter'] == 'All'){
+        if(isset($data['filter']) && $data['filter'] == 'All'){
             $events = Event::query()->orderBy($data['sort'])->get();
             $events = collect($events)->map(function ($event) use ($user){
                 $user_events = UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->first();
@@ -149,7 +149,7 @@ class EventController extends BaseController
             return $events;
         }
 
-        if($data['filter']=='Date' && $data['filter_date']){
+        if( isset($data['filter']) && isset($data['filter_date']) && $data['filter']=='Date' && $data['filter_date']){
             $events = Event::query()->where('date', $data['filter_date'])->orderBy($data['sort'])->get();
             $events = collect($events)->map(function ($event) use ($user){
                 $user_events = UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->first();
@@ -183,7 +183,7 @@ class EventController extends BaseController
             return $events;
         }
 
-        if($data['filter']){
+        if(isset($data['filter']) && $data['filter']){
             $events = Event::query()->orderBy($data['sort'])->get();
             $events = collect($events)->where('status', $data['filter'])->map(function ($event) use ($user){
                 $user_events = UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->first();
