@@ -234,7 +234,6 @@ export default {
             try {
                 const response = await axios.get('api/users');
                 this.users = response.data;
-                console.log(response);
             }catch (e){
                 console.log(e);
             }

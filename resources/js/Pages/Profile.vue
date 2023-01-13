@@ -130,7 +130,6 @@ export default {
             try {
                 const response = await axios.get('api/users/profile');
                 this.user = response.data;
-                console.log(response);
             }catch (e){
                 console.log(e);
             }
@@ -158,7 +157,6 @@ export default {
             try {
                 ip.user_id = this.user.id;
                 const response = await axios.post('api/users/ip/edit', ip);
-                console.log(response)
                 window.location.href = '/profile';
             }catch (e){
                 console.log(e);

@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 class EventController extends BaseController
 {
     public function index(Request $request){
-        $size=3;
+        $size = env('TABLE_SIZE', 25);
         $data = $request->validate([
             'filter' => ['nullable', 'string'],
             'sort' => ['nullable', 'string'],
@@ -347,5 +347,9 @@ class EventController extends BaseController
         }
         UserEvent::query()->updateOrCreate(['user_id'=>$data['user_id'], 'event_id'=>$data['event_id']], $data);
         return response()->json(null, 200);
+    }
+
+    public function get_server_name(Request $request){
+        return env('EVENT_SERVER_NAME', 'ServerName');
     }
 }

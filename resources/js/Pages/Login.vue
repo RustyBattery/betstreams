@@ -35,7 +35,6 @@ export default {
         async loginRequest(){
             try {
                 const response = await axios.post('login', this.user);
-                console.log(response);
                 window.location.href = '/';
             }catch (e){
                 alert('Введенные данные не верны!');

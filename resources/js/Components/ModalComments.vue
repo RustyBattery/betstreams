@@ -1,5 +1,5 @@
 <template>
-    <span class="block text-lg font-medium mb-2 ml-2">Comments rtmp://192:168:0:1:1936/{{serverId}}/{{streamId}}</span>
+    <span class="block text-lg font-medium mb-2 ml-2">Comments</span>
     <div v-if="comments[0]" class="w-full">
         <table class="table-auto w-full text-sm bg-gray-50">
             <thead>
@@ -23,6 +23,7 @@
 export default {
     props:{
         comments:Object,
+        server_name:String,
     }
 }
 </script>

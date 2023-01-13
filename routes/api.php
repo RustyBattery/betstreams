@@ -15,6 +15,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post('/client/edit', [\App\Http\Controllers\Api\EventController::class, 'edit_client']);
         Route::post('/comments', [\App\Http\Controllers\Api\EventController::class, 'get_comments']);
         Route::get('/new', [\App\Http\Controllers\Api\EventController::class, 'check_new']);
+        Route::get('/servername', [\App\Http\Controllers\Api\EventController::class, 'get_server_name']);
     });
     Route::prefix('/users')->group(function () {
         Route::get('/', [\App\Http\Controllers\Api\UserController::class, 'index']);

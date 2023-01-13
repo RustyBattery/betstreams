@@ -149,7 +149,7 @@
                         <i v-if="!is_admin" @click="showLink(stream);clientEvent = {taken: true, event_id: stream.id}; updateClientEvent()"
                            class="link--- fa-solid fa-link mr-1 hover:text-gray-500 transition cursor-pointer"></i>
                         <i v-if="is_admin || stream.status==='LIVE'"
-                           @click="previewPlay(stream.server_id, stream.stream_id)"
+                           @click="previewPlay(this.server_name, stream.stream_id)"
                            class="play--- fa-solid fa-play mr-1 hover:text-gray-500 transition cursor-pointer"></i>
                         <i v-if="!is_admin" @click="clientEvent = {trashcan: (Number(stream.trashcan)+1)%2, event_id: stream.id}; updateClientEvent()"
                            class="trashcan--- fa-solid fa-trash-can mr-1 hover:text-gray-500 transition cursor-pointer">
@@ -222,7 +222,7 @@
                          content-class="w-1/2 relative flex flex-col max-h-full mx-4 p-4 border rounded bg-white">
             <button class="modal__close" @click="modal.comments=false"><i
                 class="fa-solid fa-xmark text-2xl text-gray-900 hover:text-gray-600 transition"></i></button>
-            <modal-comments v-bind:comments="comments"></modal-comments>
+            <modal-comments v-bind:comments="comments" v-bind:server_name="server_name"></modal-comments>
             <div class="w-full flex justify-end mt-3">
                 <CButton @click="modal.comments=false" v-bind:color="'gray'" class="px-5 py-2">Close</CButton>
             </div>
@@ -233,7 +233,7 @@
                 class="fa-solid fa-xmark text-2xl text-gray-900 hover:text-gray-600 transition"></i></button>
 
             <span
-                class="block text-xl font-medium mb-3 ml-2">{{ editStream.id ? 'Edit rtmp://192:168:0:1:1936/' + editStream.server_id + '/' + editStream.stream_id : 'Add event' }}</span>
+                class="block text-xl font-medium mb-3 ml-2">{{ editStream.id ? 'Edit rtmp://192:168:0:1:1936/' + this.server_name + '/' + editStream.stream_id : 'Add event' }}</span>
             <form class="">
                 <div class="mb-5 flex justify-between">
                     <div class="sport w-1/2 mr-1">
@@ -508,6 +508,8 @@ export default {
                 {"id": 20, "name": "Beach soccer"},
                 {"id": 21, "name": "Other"}
             ],
+
+            server_name: '',
             events: {},
             comments:{},
             clientEvent:{},
@@ -665,7 +667,7 @@ export default {
             this.editStream = stream;
         },
         showLink(stream){
-            this.showServer = stream.server_id;
+            this.showServer = this.server_name;
             this.showId = stream.stream_id;
             this.modal.link = true;
         },
@@ -686,7 +688,6 @@ export default {
                 const response = await axios.post('api/events/edit', this.editStream);
                 this.modal.editStream=false;
                 this.getEvents();
-                console.log(response);
             }catch (e){
                 console.log(e);
                 alert('Check the entered data!');
@@ -716,7 +717,6 @@ export default {
                 const response = await axios.post('api/events/add', this.editStream);
                 this.modal.editStream=false;
                 this.getEvents();
-                console.log(response);
             }catch (e){
                 console.log(e);
                 alert('Check the entered data!');
@@ -733,6 +733,14 @@ export default {
                 alert('Check the entered data!');
             }
         },
+        async getServerName(){
+            try {
+                const response = await axios.get('api/events/servername');
+                this.server_name=response.data;
+            }catch (e){
+                console.log(e);
+            }
+        }
     },
     mounted() {
         let search = window.location.search;
@@ -753,6 +761,7 @@ export default {
             this.is_admin = true;
         }
         this.getEvents();
+        this.getServerName();
     }
 }
 </script>
