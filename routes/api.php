@@ -8,12 +8,12 @@ Route::get('/sports', [\App\Http\Controllers\Api\EventController::class, 'get_sp
 //Route::group(['middleware' => 'auth:sanctum'], function(){
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::prefix('/events')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Api\EventController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\EventController::class, 'index']);
         Route::post('/add', [\App\Http\Controllers\Api\EventController::class, 'create']);
         Route::post('/edit', [\App\Http\Controllers\Api\EventController::class, 'update']);
-        Route::delete('/delete', [\App\Http\Controllers\Api\EventController::class, 'delete']);
+        Route::post('/delete', [\App\Http\Controllers\Api\EventController::class, 'delete']);
         Route::post('/client/edit', [\App\Http\Controllers\Api\EventController::class, 'edit_client']);
-        Route::get('/comments', [\App\Http\Controllers\Api\EventController::class, 'get_comments']);
+        Route::post('/comments', [\App\Http\Controllers\Api\EventController::class, 'get_comments']);
         Route::get('/new', [\App\Http\Controllers\Api\EventController::class, 'check_new']);
     });
     Route::prefix('/users')->group(function () {
@@ -21,9 +21,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get('/profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);
         Route::post('/add', [\App\Http\Controllers\Api\UserController::class, 'create']);
         Route::post('/edit', [\App\Http\Controllers\Api\UserController::class, 'update']);
-        Route::delete('/delete', [\App\Http\Controllers\Api\UserController::class, 'delete']);
+        Route::post('/delete', [\App\Http\Controllers\Api\UserController::class, 'delete']);
         Route::get('/ip', [\App\Http\Controllers\Api\UserController::class, 'get_ip_addresses']);
         Route::post('/ip', [\App\Http\Controllers\Api\UserController::class, 'update_or_create_ip_addresses']);
-        Route::delete('/ip', [\App\Http\Controllers\Api\UserController::class, 'delete_ip_addresses']);
+        Route::post('/ip', [\App\Http\Controllers\Api\UserController::class, 'delete_ip_addresses']);
     });
 });

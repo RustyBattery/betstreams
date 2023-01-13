@@ -672,22 +672,7 @@ export default {
 
         async getEvents(){
             try {
-                // axios.defaults.headers.common['Accept'] = 'application/json';
-                // axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
-                const url = 'api/events'+'?filter='+this.filter+'&sort='+this.sort+'&filter_date='+this.filter_date;
-                console.log(url, {headers:{'content-type': 'application/x-www-form-urlencoded'}});
-                const response = await axios.get('api/events', {headers:{'content-type': 'application/json'}, data:{ "filter": this.filter, "sort":this.sort}});
-                // const response = await axios.get('api/events', { params: { filter: this.filter, sort: this.sort, filter_date:this.filter_date }});
-                console.log(response);
-                // const response = await axios.get('api/events',
-                // {
-                //     headers: {},
-                //     data: {
-                //         "filter": this.filter,
-                //         "sort": this.sort,
-                //         "filter_date": this.filter_date,
-                //     }
-                // });
+                const response = await axios.post('api/events', { filter: this.filter, sort:this.sort, filter_date:this.filter_date });
                 this.events = response.data;
                 this.totalPage = response.data.length;
                 this.currentPage = 1;
