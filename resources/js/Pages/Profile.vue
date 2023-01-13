@@ -157,7 +157,7 @@ export default {
         async editIp(ip){
             try {
                 ip.user_id = this.user.id;
-                const response = await axios.post('api/users/ip', ip);
+                const response = await axios.post('api/users/ip/edit', ip);
                 console.log(response)
                 window.location.href = '/profile';
             }catch (e){
@@ -167,7 +167,7 @@ export default {
         },
         async deleteIp(ip){
             try {
-                const response = await axios.delete('api/users/ip'+'?id='+ip.id);
+                const response = await axios.post('api/users/ip/delete', {'id':ip.id});
                 this.getUser();
             }catch (e){
                 console.log(e);
