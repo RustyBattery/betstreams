@@ -694,7 +694,7 @@ export default {
         },
         async getComments(id){
             try {
-                const response = await axios.get('api/events/comments'+'?id='+id);
+                const response = await axios.post('api/events/comments', {'id': id});
                 this.comments= response.data;
                 this.modal.comments=true;
             }catch (e){
@@ -704,7 +704,7 @@ export default {
         async deleteEvent(stream){
             if(confirm("Are you sure?")){
                 try {
-                    const response = await axios.delete('api/events/delete'+'?id='+stream.id);
+                    const response = await axios.post('api/events/delete', {'id': stream.id});
                     this.getEvents();
                 }catch (e){
                     console.log(e);

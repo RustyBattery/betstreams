@@ -265,7 +265,7 @@ export default {
         async deleteUser(user){
             if(confirm("Are you sure?")){
                 try {
-                    const response = await axios.delete('api/users/delete'+'?id='+user.id);
+                    const response = await axios.post('api/users/delete', {'id': user.id});
                     this.getUsers();
                 }catch (e){
                     console.log(e);
