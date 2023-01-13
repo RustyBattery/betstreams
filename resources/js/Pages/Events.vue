@@ -332,7 +332,7 @@
                 </div>
 
                 <div class="flex justify-between">
-                    <CButton v-if="showServer.id" @click.prevent="updateEvent()" class="px-7 py-1.5 text-lg">Save</CButton>
+                    <CButton v-if="editStream.id" @click.prevent="updateEvent()" class="px-7 py-1.5 text-lg">Save</CButton>
                     <CButton v-else @click.prevent="addEvent()" class="px-7 py-1.5 text-lg">Save</CButton>
                     <CButton @click.prevent="modal.editStream=false" :color="'gray'" class="px-6 py-1.5 text-lg">Close</CButton>
                 </div>
@@ -487,26 +487,26 @@ export default {
             streams: {},
             sports: [
                 {"id": 1, "name": "Football"},
-                {"id": 1, "name": "Hockey"},
-                {"id": 1, "name": "Table tennis"},
-                {"id": 1, "name": "Tennis"},
-                {"id": 1, "name": "Padel tennis"},
-                {"id": 1, "name": "Basketball"},
-                {"id": 1, "name": "Volleyball"},
-                {"id": 1, "name": "Esports"},
-                {"id": 3, "name": "American Football"},
-                {"id": 1, "name": "Handball"},
-                {"id": 1, "name": "Winter sports"},
-                {"id": 1, "name": "Darts"},
-                {"id": 1, "name": "Rugby"},
-                {"id": 1, "name": "Snooker"},
-                {"id": 1, "name": "Floorball"},
-                {"id": 1, "name": "Futsal"},
-                {"id": 1, "name": "Bandy"},
-                {"id": 1, "name": "Beach volleyball"},
-                {"id": 1, "name": "Badminton"},
-                {"id": 1, "name": "Beach soccer"},
-                {"id": 1, "name": "Other"}
+                {"id": 2, "name": "Hockey"},
+                {"id": 3, "name": "Table tennis"},
+                {"id": 4, "name": "Tennis"},
+                {"id": 5, "name": "Padel tennis"},
+                {"id": 6, "name": "Basketball"},
+                {"id": 7, "name": "Volleyball"},
+                {"id": 8, "name": "Esports"},
+                {"id": 9, "name": "American Football"},
+                {"id": 10, "name": "Handball"},
+                {"id": 11, "name": "Winter sports"},
+                {"id": 12, "name": "Darts"},
+                {"id": 13, "name": "Rugby"},
+                {"id": 14, "name": "Snooker"},
+                {"id": 15, "name": "Floorball"},
+                {"id": 16, "name": "Futsal"},
+                {"id": 17, "name": "Bandy"},
+                {"id": 18, "name": "Beach volleyball"},
+                {"id": 19, "name": "Badminton"},
+                {"id": 20, "name": "Beach soccer"},
+                {"id": 21, "name": "Other"}
             ],
             events: {},
             comments:{},
