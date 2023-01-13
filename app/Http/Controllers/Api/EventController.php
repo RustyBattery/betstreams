@@ -147,7 +147,7 @@ class EventController extends BaseController
                     "trashcan"=>$user_events->trashcan ?? null,
                     "taken"=>$user_events->taken ?? null,
                     "statistics"=>$user_events->statistics ?? null,
-                    "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >1 ? false : true,
+                    "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >0 ? false : true,
                 ];
                 return $event;
             })->filter(function ($event) use($user){
@@ -181,7 +181,7 @@ class EventController extends BaseController
                     "trashcan"=>$user_events->trashcan ?? null,
                     "taken"=>$user_events->taken ?? null,
                     "statistics"=>$user_events->statistics ?? null,
-                    "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >1 ? false : true,
+                    "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >0 ? false : true,
                 ];
                 return $event;
             })->filter(function ($event) use($user){
@@ -215,7 +215,7 @@ class EventController extends BaseController
                     "trashcan"=>$user_events->trashcan ?? null,
                     "taken"=>$user_events->taken ?? null,
                     "statistics"=>$user_events->statistics ?? null,
-                    "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >1 ? false : true,
+                    "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >0 ? false : true,
                 ];
                 return $event;
             })->filter(function ($event) use($user){
