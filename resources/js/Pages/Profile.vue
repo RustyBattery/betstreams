@@ -147,7 +147,7 @@ export default {
         async createIp(){
             try {
                 this.newIp.user_id = this.user.id;
-                const response = await axios.post('api/users/ip', this.newIp);
+                const response = await axios.post('api/users/ip/edit', this.newIp);
                 window.location.href = '/profile';
             }catch (e){
                 console.log(e);
