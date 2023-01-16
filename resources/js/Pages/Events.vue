@@ -73,7 +73,7 @@
                 <th class="border border-slate-300 py-1 text-xs">Sport</th>
                 <th class="border border-slate-300 py-1 text-xs">Tournament</th>
                 <th class="border border-slate-300 py-1 text-xs">Event</th>
-                <th class="border border-slate-300 py-1 text-xs">Date</th>
+<!--                <th class="border border-slate-300 py-1 text-xs">Date</th>-->
                 <th class="border border-slate-300 py-1 text-xs">Start</th>
                 <th class="border border-slate-300 py-1 text-xs">End</th>
                 <th class="border border-slate-300 py-1 text-xs max-w-24">Status</th>
@@ -94,9 +94,9 @@
                 <td class="border border-slate-300 text-xs">{{ stream.tournament }}</td>
                 <td class="border border-slate-300 text-xs">{{ stream.event }}</td>
                 <!--                <td class="border border-slate-300 text-xs">{{ stream.date }}</td>-->
-                <td class="border border-slate-300 text-xs">{{ formatDate(new Date(stream.date)) }}</td>
-                <td class="border border-slate-300 text-xs">{{ stream.start_time }}</td>
-                <td class="border border-slate-300 text-xs">{{ stream.end_time }}</td>
+<!--                <td class="border border-slate-300 text-xs">{{ formatDate(new Date(stream.date)) }}</td>-->
+                <td class="border border-slate-300 text-xs">{{ formatDate(new Date(stream.date))+' '+stream.start_time }}</td>
+                <td class="border border-slate-300 text-xs">{{ formatDate(new Date(stream.date))+' '+stream.end_time }}</td>
                 <td v-if="!is_admin" class="border border-slate-300 text-xs">{{ stream.status }}</td>
                 <td v-if="is_admin" @change="editStream=stream; updateEvent(); getEvents();" class="border border-slate-300 text-xs">
                     <select v-model="stream.status"
@@ -415,7 +415,7 @@
             </button>
 <!--            <span class="block text-lg font-medium mb-2 ml-2">Link:</span>-->
             <div class="my-6 ml-3">
-                <span class="text-lg font-medium">Link:</span> <a :href="'rtmp://192:168:0:1:1936/'+showServer+'/'+showId" class="ml-2 text-lg font-medium text-gray-500 hover:text-gray-400 transition">{{'rtmp://192:168:0:1:1936/'+showServer+'/'+showId}}</a>
+                <span class="text-lg font-medium">Link:</span> <a @click="copy('rtmp://192:168:0:1:1936/'+showServer+'/'+showId)" class="ml-2 text-lg font-medium text-gray-500 hover:text-gray-400 transition cursor-pointer" title="copy">{{'rtmp://192:168:0:1:1936/'+showServer+'/'+showId}}</a>
 <!--                <div class="w-full flex justify-end mt-3">-->
 <!--                    <CButton @click="modal.link=false" v-bind:color="'gray'" class="px-5 py-2">Close</CButton>-->
 <!--                </div>-->
@@ -751,6 +751,9 @@ export default {
             const url = 'api/statistics'+'?start_date='+this.statistics.startDate+'&end_date='+this.statistics.endDate+'&taken='+Number(this.statistics.take)+'&comment='+Number(this.statistics.comment);
             window.location.href = url;
             this.modal.statistics=false;
+        },
+        copy(value){
+            navigator.clipboard.writeText(value);
         }
     },
     mounted() {

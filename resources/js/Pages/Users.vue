@@ -25,7 +25,7 @@
                 <td class="border border-slate-300 p-1">{{ user.username }}</td>
                 <td class="border border-slate-300 p-1 ">{{ user.role }}</td>
                 <td v-if="user.token" class="overflow-ellipsis overflow-hidden border border-slate-300 text-center cursor-pointer hover:text-gray-500 transition">
-                    <span class="font-medium overflow-ellipsis">{{ user.token }}</span>
+                    <span @click="copy(user.token)" class="font-medium overflow-ellipsis">{{ user.token }}</span>
                 </td>
                 <td v-else class="border border-slate-300 p-1 text-center">
                     <button type="submit" @click.prevent="editUser=user; editUser.can_use_api=1; updateUser()"
@@ -34,7 +34,7 @@
                     </button>
                 </td>
                 <td class="border border-slate-300 text-center cursor-pointer hover:text-gray-500 transition">
-                    <span class="font-medium">show</span>
+                    <span @click="get_ip_list(user); modal.ip_lists=true" class="font-medium">show</span>
                 </td>
                 <td class="">
                     <button type="submit" @click="editUser = user; editUser.token ? editUser.can_use_api=true:editUser.can_use_api=false; modal.editUser = true"
@@ -158,7 +158,6 @@
                 </div>
             </form>
         </vue-final-modal>
-
         <vue-final-modal v-model="modal.statistics" classes="flex justify-center items-center"
                          content-class="w-1/3 relative flex flex-col max-h-full mx-4 p-4 border rounded bg-white">
             <button class="modal__close" @click="modal.statistics = false">
@@ -202,6 +201,21 @@
 
 
         </vue-final-modal>
+        <vue-final-modal v-model="modal.ip_lists" classes="flex justify-center items-center"
+                         content-class="w-1/3 relative flex flex-col max-h-full mx-4 p-4 border rounded bg-white">
+            <button class="modal__close" @click="modal.ip_lists=false">
+                <i class="fa-solid fa-xmark text-2xl text-gray-900 hover:text-gray-600 transition"></i>
+            </button>
+            <span class="block text-lg font-medium mb-3 ml-2">Ip lists</span>
+            <div class="">
+                <div v-for="ip in ip_lists" class=" ml-2 mb-2">
+                    <span>{{ ip.value }}</span>
+                </div>
+                <div class="w-full flex justify-end mt-3">
+                    <CButton @click="modal.ip_lists=false" v-bind:color="'gray'" class="px-5 py-2">Close</CButton>
+                </div>
+            </div>
+        </vue-final-modal>
     </div>
 
 </template>
@@ -228,10 +242,12 @@ export default {
                 newUser: false,
                 editUser: false,
                 statistics: false,
+                ip_lists:false
             },
             newUser: {},
             editUser:{},
             users:{},
+            ip_lists: [],
             statistics: {
                 user: {},
                 startDate: '',
@@ -294,6 +310,17 @@ export default {
             const url = 'api/statistics'+'?start_date='+this.statistics.startDate+'&end_date='+this.statistics.endDate+'&taken='+Number(this.statistics.take)+'&comment='+Number(this.statistics.comment)+'&user_id='+this.statistics.user.id;
             window.location.href = url;
             this.modal.statistics=false;
+        },
+        async get_ip_list(user){
+            try {
+                const response = await axios.post('api/users/ip', {id: user.id});
+                this.ip_lists = response.data;
+            }catch (e){
+                console.log(e);
+            }
+        },
+        copy(value){
+            navigator.clipboard.writeText(value);
         }
     },
     mounted() {

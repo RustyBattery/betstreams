@@ -16,7 +16,7 @@
         </form>
         <div v-if="user.token" class="mb-6">
             <span class="block mb-2 text-lg font-medium text-gray-900">
-                Your API token: <span class="text-md font-medium text-gray-600 transition hover:text-gray-500 cursor-pointer ml-3" title="Hi! I'm tooltip">{{this.user.token}}</span>
+                Your API token: <span @click="copy(this.user.token)" class="text-md font-medium text-gray-600 transition hover:text-gray-500 cursor-pointer ml-3" title="Hi! I'm tooltip">{{this.user.token}}</span>
             </span>
         </div>
         <div class="mb-6">
@@ -193,6 +193,9 @@ export default {
             const url = 'api/statistics'+'?start_date='+this.statistics.startDate+'&end_date='+this.statistics.endDate+'&taken='+Number(this.statistics.take)+'&comment='+Number(this.statistics.comment)+'&user_id='+this.statistics.user.id;
             window.location.href = url;
             this.modal.statistics=false;
+        },
+        copy(value){
+            navigator.clipboard.writeText(value);
         }
     },
     mounted() {

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/sports', [\App\Http\Controllers\Api\EventController::class, 'get_sports']);
+Route::get('/', [\App\Http\Controllers\Api\EventController::class, 'get']);
 
 //Route::group(['middleware' => 'auth:sanctum'], function(){
 Route::group(['middleware' => 'auth:sanctum'], function(){
@@ -25,7 +26,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post('/add', [\App\Http\Controllers\Api\UserController::class, 'create']);
         Route::post('/edit', [\App\Http\Controllers\Api\UserController::class, 'update']);
         Route::post('/delete', [\App\Http\Controllers\Api\UserController::class, 'delete']);
-        Route::get('/ip', [\App\Http\Controllers\Api\UserController::class, 'get_ip_addresses']);
+        Route::post('/ip', [\App\Http\Controllers\Api\UserController::class, 'get_ip_addresses']);
         Route::post('/ip/edit', [\App\Http\Controllers\Api\UserController::class, 'update_or_create_ip_addresses']);
         Route::post('/ip/delete', [\App\Http\Controllers\Api\UserController::class, 'delete_ip_addresses']);
     });

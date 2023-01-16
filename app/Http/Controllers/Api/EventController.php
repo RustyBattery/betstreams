@@ -16,7 +16,22 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+
+class ApiEvent{
+    public $sport = '';
+    public $tournament = '';
+    public $title = '';
+    public $date = '';
+    public $startime = '';
+    public $endtime = '';
+    public $status = '';
+    public $quality = '';
+    public $streamID = '';
+    public $rtmplink = '';
+
+}
 
 class EventController extends BaseController
 {
@@ -78,8 +93,8 @@ class EventController extends BaseController
                     "tournament"=>$event->tournament,
                     "event"=>$event->event,
                     "date"=>$event->date,
-                    "start_time"=>$event->start_time,
-                    "end_time"=>$event->end_time,
+                    "start_time"=>explode(':', $event->start_time)[0].':'.explode(':', $event->start_time)[1],
+                    "end_time"=>explode(':', $event->end_time)[0].':'.explode(':', $event->end_time)[1],
                     "comment"=>$event->comment,
                     "status"=>$event->status,
                     "resolution"=>$event->resolution,
@@ -304,7 +319,7 @@ class EventController extends BaseController
 //        $events = Event::query()->count();
 //        $check_events = $user->statistics()->count();
 //        return $events-$check_events;
-        $events = Event::query()->where('created_at', '>', Carbon::now()->subMinutes(3))->count();
+        $events = Event::query()->where('created_at', '>', Carbon::now()->subMinutes(5))->count();
         return $events;
     }
 
@@ -381,5 +396,51 @@ class EventController extends BaseController
             return Excel::download(new ClientStatisticsExport($data['user_id'], $data['start_date'], $data['end_date'], $data['taken'], $data['comment']), 'statistics.xlsx');
         }
         return Excel::download(new StatisticsExport($data['start_date'], $data['end_date'], $data['taken'], $data['comment']), 'statistics.xlsx');
+    }
+
+    public function get(Request $request){
+        $data = $request->validate([
+            'token' => ['required', 'string'],
+            'date' => ['nullable', 'string'],
+            'sport' => ['nullable', 'string'],
+            'tournament' => ['nullable', 'string'],
+            'event' => ['nullable', 'string'],
+        ]);
+        if(!DB::table('personal_access_tokens')->where('token', $data['token'])->count()){
+            return response()->json('Invalid token, 401');
+        }
+        unset($data["token"]);
+        if(isset($data['date'])){
+            if($data['date'] == 'now'){
+                $data['date'] = Carbon::now();
+            }
+            else{
+                $data['date'] = Carbon::create($data['date']);
+            }
+            $data['date'] = $data['date']->format('Y-m-d');
+        }
+        if(isset($data['sport'])){
+            $data['name'] = $data['sport'];
+            unset($data["sport"]);
+        }
+        $events = Event::query()->join('sports', 'sports.id', '=', 'events.sport_id')
+            ->where($data)->get();
+
+        $events = $events->collect($events)->map(function ($event){
+            $res = new ApiEvent();
+            $res->sport = $event->name;
+            $res->tournament = $event->tournament;
+            $res->title = $event->event;
+            $res->date = Carbon::create($event->date)->format('d.m.Y');
+            $res->startime = Carbon::create($event->start_time)->format('H:i');
+            $res->endtime = Carbon::create($event->end_time)->format('H:i');
+            $res->status = $event->status;
+            $res->quality = $event->resolution;
+            $res->streamID = $event->stream_id;
+            $res->rtmplink = 'rtmp://192:168:0:1:1936/'.env('EVENT_SERVER_NAME', 'ServerName').'/'.$event->stream_id;
+            return $res;
+        });
+
+        return $events;
     }
 }
