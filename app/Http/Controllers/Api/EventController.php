@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exports\ClientStatisticsExport;
+use App\Exports\StatisticsExport;
+use App\Imports\EventsCollectionImport;
+use App\Imports\EventsImport;
 use App\Models\Event;
 use App\Models\Sport;
 use App\Models\User;
@@ -12,6 +16,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EventController extends BaseController
 {
@@ -34,7 +39,7 @@ class EventController extends BaseController
         if($data['filter'] == 'New'){
             $events = Event::query()->join('sports', 'sports.id', '=', 'events.sport_id')->leftJoin('user_events', function ($join) {
                 $join->on('events.id', '=', 'user_events.event_id');
-            })->orderBy($data['sort'])->select(
+            })->orderBy($data['sort'])->orderBy('date')->orderBy('start_time')->select(
                 "events.id",
                 "events.sport_id",
                 "sports.name as sport_name",
@@ -49,6 +54,7 @@ class EventController extends BaseController
                 "events.server_id",
                 "events.stream_id",
                 "events.source",
+                "events.created_at",
                 "user_events.user_id",
                 "user_events.comment as client_comment",
                 "user_events.add_comment",
@@ -81,6 +87,7 @@ class EventController extends BaseController
                     "stream_id"=>$event->stream_id,
                     "source"=>$event->source,
                     "new"=>true,
+                    "recently"=> Carbon::create($event->created_at) > Carbon::now()->subHour() ? 1 : 0
                 ];
                 return $event;
             })->chunk($size);
@@ -91,7 +98,7 @@ class EventController extends BaseController
         if($data['filter'] == 'Trashcan'){
             $events = Event::query()->join('sports', 'sports.id', '=', 'events.sport_id')->leftJoin('user_events', function ($join) {
                 $join->on('events.id', '=', 'user_events.event_id');
-            })->orderBy($data['sort'])->where('user_events.user_id', $user->id)->whereNotNull('user_events.trashcan')->select(
+            })->orderBy($data['sort'])->orderBy('start_time')->where('user_events.user_id', $user->id)->whereNotNull('user_events.trashcan')->select(
                 "events.id",
                 "events.sport_id",
                 "sports.name as sport_name",
@@ -106,6 +113,7 @@ class EventController extends BaseController
                 "events.server_id",
                 "events.stream_id",
                 "events.source",
+                "events.created_at",
                 "user_events.comment as client_comment",
                 "user_events.add_comment",
                 "user_events.personal_id",
@@ -116,6 +124,7 @@ class EventController extends BaseController
             $events = collect($events)->map(function ($event){
                 $event->start_time = explode(':', $event->start_time)[0].':'.explode(':', $event->start_time)[1];
                 $event->end_time = explode(':', $event->end_time)[0].':'.explode(':', $event->end_time)[1];
+                $event->recently = Carbon::create($event->created_at) > Carbon::now()->subHour() ? 1 : 0;
                 return $event;
             })->chunk($size);
 
@@ -123,7 +132,7 @@ class EventController extends BaseController
         }
 
         if($data['filter'] == 'All'){
-            $events = Event::query()->orderBy($data['sort'])->get();
+            $events = Event::query()->orderBy($data['sort'])->orderBy('start_time')->get();
             $events = collect($events)->map(function ($event) use ($user){
                 $user_events = UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->first();
                 $event = [
@@ -148,6 +157,7 @@ class EventController extends BaseController
                     "taken"=>$user_events->taken ?? null,
                     "statistics"=>$user_events->statistics ?? null,
                     "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >0 ? false : true,
+                    "recently"=> Carbon::create($event->created_at) > Carbon::now()->subHour() ? 1 : 0,
                 ];
                 return $event;
             })->filter(function ($event) use($user){
@@ -157,7 +167,7 @@ class EventController extends BaseController
         }
 
         if(isset($data['filter_date']) && $data['filter']=='Date' && $data['filter_date']){
-            $events = Event::query()->where('date', $data['filter_date'])->orderBy($data['sort'])->get();
+            $events = Event::query()->where('date', $data['filter_date'])->orderBy($data['sort'])->orderBy('start_time')->get();
             $events = collect($events)->map(function ($event) use ($user){
                 $user_events = UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->first();
                 $event = [
@@ -182,6 +192,7 @@ class EventController extends BaseController
                     "taken"=>$user_events->taken ?? null,
                     "statistics"=>$user_events->statistics ?? null,
                     "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >0 ? false : true,
+                    "recently" => Carbon::create($event->created_at) > Carbon::now()->subHour() ? 1 : 0
                 ];
                 return $event;
             })->filter(function ($event) use($user){
@@ -191,7 +202,7 @@ class EventController extends BaseController
         }
 
         if($data['filter']){
-            $events = Event::query()->orderBy($data['sort'])->get();
+            $events = Event::query()->orderBy($data['sort'])->orderBy('start_time')->get();
             $events = collect($events)->where('status', $data['filter'])->map(function ($event) use ($user){
                 $user_events = UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->first();
                 $event = [
@@ -216,6 +227,7 @@ class EventController extends BaseController
                     "taken"=>$user_events->taken ?? null,
                     "statistics"=>$user_events->statistics ?? null,
                     "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >0 ? false : true,
+                    "recently" => Carbon::create($event->created_at) > Carbon::now()->subHour() ? 1 : 0
                 ];
                 return $event;
             })->filter(function ($event) use($user){
@@ -351,5 +363,23 @@ class EventController extends BaseController
 
     public function get_server_name(Request $request){
         return env('EVENT_SERVER_NAME', 'ServerName');
+    }
+
+    public function import_events(Request $request){
+        Excel::import(new EventsImport(), request()->file('events'));
+    }
+
+    public function export_statistics(Request $request){
+        $data = $request->validate([
+            'user_id' => ['nullable', 'numeric'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date'],
+            'taken' => ['required', 'boolean'],
+            'comment' => ['required', 'boolean'],
+        ]);
+        if(isset($data['user_id'])){
+            return Excel::download(new ClientStatisticsExport($data['user_id'], $data['start_date'], $data['end_date'], $data['taken'], $data['comment']), 'statistics.xlsx');
+        }
+        return Excel::download(new StatisticsExport($data['start_date'], $data['end_date'], $data['taken'], $data['comment']), 'statistics.xlsx');
     }
 }

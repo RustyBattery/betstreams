@@ -107,7 +107,7 @@ class UserController extends BaseController
 
     public function profile(){
         $user = $user = auth('sanctum')->user();
-        $user->token = $user->tokens()->first();
+        $user->token = $user->tokens()->first()->token;
         $user->ip_list = UserIpAddress::query()->where('user_id', $user->id)->get();
         return $user;
     }

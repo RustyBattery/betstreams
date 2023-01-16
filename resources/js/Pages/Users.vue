@@ -43,7 +43,7 @@
                     </button>
                 </td>
                 <td class="">
-                    <button type="submit" @click="modal.statistics = true"
+                    <button type="submit" @click="modal.statistics = true; statistics.user = user"
                             class="text-white text-sm bg-sky-600 hover:bg-sky-800 transition focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-3 py-1 text-center">
                         Statistics
                     </button>
@@ -158,35 +158,45 @@
                 </div>
             </form>
         </vue-final-modal>
+
         <vue-final-modal v-model="modal.statistics" classes="flex justify-center items-center"
                          content-class="w-1/3 relative flex flex-col max-h-full mx-4 p-4 border rounded bg-white">
             <button class="modal__close" @click="modal.statistics = false">
                 <i class="fa-solid fa-xmark text-2xl text-gray-900 hover:text-gray-600 transition"></i>
             </button>
-            <span class="block text-lg font-medium mb-5 ml-2">Get statistics user2048</span>
+            <span class="block text-lg font-medium mb-5 ml-2">Get statistics {{statistics.user.username}}</span>
             <div class="">
-                <div class="w-full mb-6 text-xs">
-                    <Datepicker v-model="date" range />
+                <div class="w-full mb-6 flex justify-between">
+                    <div class="date w-6/12 mr-1">
+                        <label for="date_start" class="block mb-2 text-mb font-medium text-gray-900 ml-2">Date
+                            start</label>
+                        <input type="date" id="date_start" v-model="statistics.startDate"
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
+                               required>
+                    </div>
+                    <div class="date w-6/12 ml-1">
+                        <label for="date_end" class="block mb-2 text-mb font-medium text-gray-900 ml-2">Date end</label>
+                        <input type="date" id="date_end" v-model="statistics.endDate"
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
+                               required>
+                    </div>
                 </div>
                 <div class="flex mb-6">
                     <div class="flex items-center mr-5">
-                        <input checked id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <input v-model="statistics.take" id="default-checkbox" type="checkbox" value=""
+                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Taken</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">With comments</label>
+                        <input v-model="statistics.comment" id="checked-checkbox" type="checkbox" value=""
+                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">With
+                            comments</label>
                     </div>
                 </div>
                 <div class="flex justify-between">
-                    <button type="submit" @click="modal.statistics = false"
-                            class="text-white text-md bg-sky-600 hover:bg-sky-800 transition focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg w-auto px-5 py-1 text-center">
-                        Download
-                    </button>
-                    <button type="submit" @click="modal.statistics = false"
-                            class="text-white text-base bg-gray-400 hover:bg-gray-500 transition focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2 text-center">
-                        Close
-                    </button>
+                    <c-button class="px-5 py-1" @click="getStatistics()">Download</c-button>
+                    <c-button :color="'gray'" class="px-5 py-1" @click="modal.statistics = false">Close</c-button>
                 </div>
             </div>
 
@@ -198,6 +208,7 @@
 
 <script>
 import Layout from '@/Components/Layout.vue'
+import CButton from '@/Components/UI/CButton.vue'
 import {$vfm, VueFinalModal, ModalsContainer} from 'vue-final-modal'
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -208,7 +219,8 @@ export default {
     components: {
         VueFinalModal,
         ModalsContainer,
-        Datepicker
+        Datepicker,
+        CButton,
     },
     data(){
         return{
@@ -219,7 +231,14 @@ export default {
             },
             newUser: {},
             editUser:{},
-            users:{}
+            users:{},
+            statistics: {
+                user: {},
+                startDate: '',
+                endDate: '',
+                take: true,
+                comment: true,
+            },
         }
     },
     setup() {
@@ -270,6 +289,11 @@ export default {
                     console.log(e);
                 }
             }
+        },
+        getStatistics(){
+            const url = 'api/statistics'+'?start_date='+this.statistics.startDate+'&end_date='+this.statistics.endDate+'&taken='+Number(this.statistics.take)+'&comment='+Number(this.statistics.comment)+'&user_id='+this.statistics.user.id;
+            window.location.href = url;
+            this.modal.statistics=false;
         }
     },
     mounted() {

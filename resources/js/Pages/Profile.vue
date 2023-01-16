@@ -75,20 +75,32 @@
         </div>
         <div class="">
             <span class="block mb-2 text-lg font-medium text-gray-900">Get statistics</span>
-            <div class="w-96 mb-3">
-                <Datepicker v-model="date" range />
+            <div class="w-96 mb-3 flex justify-between">
+                <div class="date w-6/12 mr-1">
+                    <label for="date_start" class="block mb-2 text-mb font-medium text-gray-900 ml-2">Date
+                        start</label>
+                    <input type="date" id="date_start" v-model="statistics.startDate"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
+                           required>
+                </div>
+                <div class="date w-6/12 ml-1">
+                    <label for="date_end" class="block mb-2 text-mb font-medium text-gray-900 ml-2">Date end</label>
+                    <input type="date" id="date_end" v-model="statistics.endDate"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
+                           required>
+                </div>
             </div>
             <div class="flex mb-4">
                 <div class="flex items-center mr-5">
-                    <input checked id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <input v-model="statistics.take" id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Taken</label>
                 </div>
                 <div class="flex items-center">
-                    <input id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <input v-model="statistics.comment" id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">With comments</label>
                 </div>
             </div>
-            <button type="submit"
+            <button type="submit" @click="statistics.user = user; getStatistics()"
                     class="text-white text-md bg-sky-600 hover:bg-sky-800 transition focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg w-auto px-5 py-1 text-center">
                 Download
             </button>
@@ -115,7 +127,13 @@ export default {
           newIp:{
               user_id: '',
               value: ''
-          }
+          },
+          statistics: {
+              startDate: '',
+              endDate: '',
+              take: true,
+              comment: true,
+          },
       }
     },
     setup() {
@@ -170,6 +188,11 @@ export default {
             }catch (e){
                 console.log(e);
             }
+        },
+        getStatistics(){
+            const url = 'api/statistics'+'?start_date='+this.statistics.startDate+'&end_date='+this.statistics.endDate+'&taken='+Number(this.statistics.take)+'&comment='+Number(this.statistics.comment)+'&user_id='+this.statistics.user.id;
+            window.location.href = url;
+            this.modal.statistics=false;
         }
     },
     mounted() {

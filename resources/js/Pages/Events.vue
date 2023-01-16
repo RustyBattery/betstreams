@@ -89,7 +89,7 @@
 
             <tbody>
             <tr v-for="stream in streams"
-                :class="{'bg-green-100': stream.status==='LIVE', 'bg-yellow-100': stream.status==='FINISHED', 'bg-red-100': stream.status==='SCHEDULED', 'bg-blue-100': stream.new === true && is_admin === false}">
+                :class="{'bg-green-100': stream.status==='LIVE', 'bg-yellow-100': stream.status==='FINISHED', 'bg-red-100': stream.status==='SCHEDULED', 'bg-blue-100': stream.new === true && is_admin === false , 'font-medium': stream.recently}">
                 <td class="border border-slate-300 text-xs">{{ stream.sport }}</td>
                 <td class="border border-slate-300 text-xs">{{ stream.tournament }}</td>
                 <td class="border border-slate-300 text-xs">{{ stream.event }}</td>
@@ -274,7 +274,7 @@
                                required>
                     </div>
                     <div class="end w-3/12">
-                        <label for="end" class="block mb-2 text-mb font-medium text-gray-900 ml-2">Start</label>
+                        <label for="end" class="block mb-2 text-mb font-medium text-gray-900 ml-2">End</label>
                         <input type="time" id="end" v-model="editStream.end_time"
                                class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
                                required>
@@ -374,7 +374,7 @@
                     </div>
                 </div>
                 <div class="flex justify-between">
-                    <c-button class="px-5 py-1" @click="modal.statistics = false">Download</c-button>
+                    <c-button class="px-5 py-1" @click="getStatistics()">Download</c-button>
                     <c-button :color="'gray'" class="px-5 py-1" @click="modal.statistics = false">Close</c-button>
                 </div>
             </div>
@@ -400,11 +400,11 @@
                           hover:file:bg-gray-800
                         "/>
                     </label>
-                    <i v-if="excel.streams" @click="modal.addStreamExcel = false" class="text-lg block fa-solid fa-check hover:text-gray-500 transition cursor-pointer"></i>
+                    <i v-if="excel.streams" @click="streams_import()" class="text-lg block fa-solid fa-check hover:text-gray-500 transition cursor-pointer"></i>
                 </div>
                 <div class="flex justify-between">
                     <div class=""></div>
-                    <CButton @click="modal.addStreamExcel=false" :color="'gray'" class="px-5 py-1 text-md">Close</CButton>
+                    <CButton @click="streams_import()" :color="'gray'" class="px-5 py-1 text-md">Save</CButton>
                 </div>
             </div>
         </vue-final-modal>
@@ -459,9 +459,6 @@ export default {
                 addStreamExcel: false,
                 link: false,
             },
-            // showPushModal: true,
-            // showPlay: false,
-            // showComments: false,
             excel: {
                 streams: '',
                 statistics: '',
@@ -531,7 +528,6 @@ export default {
     methods: {
         onChangeFile(event) {
             this.excel.streams=event.target.files[0];
-            console.log(this.excel.streams);
         },
         formatDate(date) {
             return date.toLocaleDateString();
@@ -672,6 +668,16 @@ export default {
             this.modal.link = true;
         },
 
+        async streams_import(){
+            try {
+                const response = await axios.post('api/events/import', {events: this.excel.streams}, {headers:{'Content-Type':'multipart/form-data'}});
+                this.modal.addStreamExcel=false;
+                this.getEvents();
+            }catch (e){
+                console.log(e);
+            }
+        },
+
         async getEvents(){
             try {
                 const response = await axios.post('api/events', { filter: this.filter, sort:this.sort, filter_date:this.filter_date });
@@ -740,6 +746,11 @@ export default {
             }catch (e){
                 console.log(e);
             }
+        },
+        getStatistics(){
+            const url = 'api/statistics'+'?start_date='+this.statistics.startDate+'&end_date='+this.statistics.endDate+'&taken='+Number(this.statistics.take)+'&comment='+Number(this.statistics.comment);
+            window.location.href = url;
+            this.modal.statistics=false;
         }
     },
     mounted() {

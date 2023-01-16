@@ -7,6 +7,7 @@ Route::get('/sports', [\App\Http\Controllers\Api\EventController::class, 'get_sp
 
 //Route::group(['middleware' => 'auth:sanctum'], function(){
 Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::get('/statistics', [\App\Http\Controllers\Api\EventController::class, 'export_statistics']);
     Route::prefix('/events')->group(function () {
         Route::post('/', [\App\Http\Controllers\Api\EventController::class, 'index']);
         Route::post('/add', [\App\Http\Controllers\Api\EventController::class, 'create']);
@@ -16,6 +17,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post('/comments', [\App\Http\Controllers\Api\EventController::class, 'get_comments']);
         Route::get('/new', [\App\Http\Controllers\Api\EventController::class, 'check_new']);
         Route::get('/servername', [\App\Http\Controllers\Api\EventController::class, 'get_server_name']);
+        Route::post('/import', [\App\Http\Controllers\Api\EventController::class, 'import_events']);
     });
     Route::prefix('/users')->group(function () {
         Route::get('/', [\App\Http\Controllers\Api\UserController::class, 'index']);
