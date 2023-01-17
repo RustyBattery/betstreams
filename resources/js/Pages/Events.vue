@@ -695,8 +695,10 @@ export default {
                 this.modal.editStream=false;
                 this.getEvents();
             }catch (e){
-                console.log(e);
-                alert('Check the entered data!');
+                if(e.response.status < 500){
+                    alert(e.response.data.message);
+                }
+                else alert('An error has occurred! Try again.');
             }
         },
         async getComments(id){
@@ -724,8 +726,10 @@ export default {
                 this.modal.editStream=false;
                 this.getEvents();
             }catch (e){
-                console.log(e);
-                alert('Check the entered data!');
+                if(e.response.status < 500){
+                    alert(e.response.data.message);
+                }
+                else alert('An error has occurred! Try again.');
             }
         },
         async updateClientEvent(){

@@ -37,7 +37,10 @@ export default {
                 const response = await axios.post('login', this.user);
                 window.location.href = '/';
             }catch (e){
-                alert('Введенные данные не верны!');
+                if(e.response.status < 500){
+                    alert(e.response.data.message);
+                }
+                else alert('An error has occurred! Try again.');
             }
         },
         async login(){

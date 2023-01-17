@@ -157,8 +157,10 @@ export default {
                 const response = await axios.post('api/users/edit', this.user);
                 window.location.href = '/profile';
             }catch (e){
-                console.log(e);
-                alert('Check the entered data!');
+                if(e.response.status < 500){
+                    alert(e.response.data.message);
+                }
+                else alert('An error has occurred! Try again.');
             }
         },
         async createIp(){
@@ -167,8 +169,10 @@ export default {
                 const response = await axios.post('api/users/ip/edit', this.newIp);
                 window.location.href = '/profile';
             }catch (e){
-                console.log(e);
-                alert('Check the entered data!');
+                if(e.response.status < 500){
+                    alert(e.response.data.message);
+                }
+                else alert('An error has occurred! Try again.');
             }
         },
         async editIp(ip){
@@ -177,8 +181,10 @@ export default {
                 const response = await axios.post('api/users/ip/edit', ip);
                 window.location.href = '/profile';
             }catch (e){
-                console.log(e);
-                alert('Check the entered data!');
+                if(e.response.status < 500){
+                    alert(e.response.data.message);
+                }
+                else alert('An error has occurred! Try again.');
             }
         },
         async deleteIp(ip){

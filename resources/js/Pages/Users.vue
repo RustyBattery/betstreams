@@ -281,8 +281,10 @@ export default {
                 this.newUser ={};
                 this.getUsers();
             }catch (e){
-                console.log(e);
-                alert('Check the entered data!');
+                if(e.response.status < 500){
+                    alert(e.response.data.message);
+                }
+                else alert('An error has occurred! Try again.');
             }
         },
         async updateUser(){
@@ -292,8 +294,10 @@ export default {
                 this.modal.editUser=false;
                 this.getUsers();
             }catch (e){
-                console.log(e);
-                alert('Check the entered data!');
+                if(e.response.status < 500){
+                    alert(e.response.data.message);
+                }
+                else alert('An error has occurred! Try again.');
             }
         },
         async deleteUser(user){
