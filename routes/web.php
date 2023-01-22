@@ -22,12 +22,12 @@ Route::inertia('/login', 'Login')->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/', function (){
-        return Inertia::render('Events', ['authUser'=> auth('sanctum')->user()]);
+        return Inertia::render('Events', ['authUser'=> auth('sanctum')->user(), 'app_name' => env('APP_NAME')]);
     });
     Route::get('/profile', function (){
-        return Inertia::render('Profile', ['authUser'=> auth('sanctum')->user()]);
+        return Inertia::render('Profile', ['authUser'=> auth('sanctum')->user(), 'app_name' => env('APP_NAME')]);
     });
     Route::get('/users', function (){
-        return Inertia::render('Users', ['authUser'=> auth('sanctum')->user()]);
+        return Inertia::render('Users', ['authUser'=> auth('sanctum')->user(), 'app_name' => env('APP_NAME')]);
     });
 });

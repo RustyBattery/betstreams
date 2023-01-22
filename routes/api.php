@@ -30,4 +30,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post('/ip/edit', [\App\Http\Controllers\Api\UserController::class, 'update_or_create_ip_addresses']);
         Route::post('/ip/delete', [\App\Http\Controllers\Api\UserController::class, 'delete_ip_addresses']);
     });
+    Route::prefix('/conf')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\ConfigController::class, 'index']);
+        Route::post('/edit', [\App\Http\Controllers\Api\ConfigController::class, 'update']);
+    });
 });

@@ -4,22 +4,17 @@
             <div class="flex flex-wrap items-center justify-between mx-4">
                 <div class="flex">
                     <a href="/" class="flex items-center">
-                        <span class="self-center text-xl font-semibold whitespace-nowrap">BetStreams</span>
+                        <span class="self-center text-xl font-semibold whitespace-nowrap">{{ app_name}}</span>
                     </a>
                     <div class="block mx-10">
                         <ul class="flex p-4 text-sm font-medium">
-<!--                            <li class="mx-2">-->
-<!--                                <a href="/" class="block p-2 text-gray-700   text-blue-700 cursor-default   hover:text-blue-700 transition" aria-current="page">Streams</a>-->
-<!--                            </li>-->
                             <li class="mx-2">
                                 <a href="/" class="block p-2 text-gray-700 hover:text-blue-700 transition" :class="[url ==='/' ? 'text-blue-700' : '']">Streams</a>
                             </li>
                             <li v-if="authUser.role === 'admin'" class="mx-2">
-<!--                            <li class="mx-2">-->
                                 <a href="/users" class="block p-2 text-gray-700 hover:text-blue-700 transition" :class="[url ==='/users' ? 'text-blue-700' : '']">Users</a>
                             </li>
                             <li v-if="authUser.role === 'client'" class="mx-2">
-<!--                            <li class="mx-2">-->
                                 <a href="/profile" class="block p-2 text-gray-700 hover:text-blue-700 transition" :class="[url ==='/profile' ? 'text-blue-700' : '']">Profile</a>
                             </li>
                         </ul>
@@ -44,17 +39,19 @@
 <script>
 export default{
     props:{
-      authUser: Object,
+        authUser: Object,
+        app_name: "",
     },
     data(){
         return{
             url: window.location.pathname,
+            conf: {},
         }
     },
     methods:{
         async logout(){
             try {
-                const response = await await axios.post('/logout');
+                const response = await axios.post('/logout');
                 window.location.href = '/';
             }catch (e){
                console.log(e);

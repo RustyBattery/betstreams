@@ -89,7 +89,7 @@
 
             <tbody>
             <tr v-for="stream in streams"
-                :class="{'bg-green-100': stream.status==='LIVE', 'bg-yellow-100': stream.status==='FINISHED', 'bg-red-100': stream.status==='SCHEDULED', 'bg-blue-100': stream.new === true && is_admin === false , 'font-medium': stream.recently}">
+                :class="{'bg-green-100': stream.status==='LIVE', 'bg-yellow-100': stream.status==='FINISHED', 'bg-red-100': stream.status==='CANCELED', 'bg-blue-100': stream.new === true && is_admin === false , 'font-medium': stream.recently}">
                 <td class="border border-slate-300 text-xs">{{ stream.sport }}</td>
                 <td class="border border-slate-300 text-xs">{{ stream.tournament }}</td>
                 <td class="border border-slate-300 text-xs">{{ stream.event }}</td>
@@ -210,7 +210,7 @@
             <button class="modal__close" @click="modal.preview=false">
                 <i class="fa-solid fa-xmark text-2xl text-gray-900 hover:text-gray-600 transition"></i>
             </button>
-            <span class="block text-lg font-medium mb-2 ml-2">Preview rtmp://192:168:0:1:1936/{{ showServer }}/{{ showId }}</span>
+            <span class="block text-lg font-medium mb-2 ml-2">Preview</span>
             <div class="">
                 <div id="player"></div>
                 <div class="w-full flex justify-end mt-3">
@@ -233,7 +233,7 @@
                 class="fa-solid fa-xmark text-2xl text-gray-900 hover:text-gray-600 transition"></i></button>
 
             <span
-                class="block text-xl font-medium mb-3 ml-2">{{ editStream.id ? 'Edit rtmp://192:168:0:1:1936/' + this.server_name + '/' + editStream.stream_id : 'Add event' }}</span>
+                class="block text-xl font-medium mb-3 ml-2">{{ editStream.id ? 'Edit rtmp://'+conf.ip+'/' + conf.server_name + '/' + editStream.stream_id : 'Add event' }}</span>
             <form class="">
                 <div class="mb-5 flex justify-between">
                     <div class="sport w-1/2 mr-1">
@@ -415,7 +415,7 @@
             </button>
 <!--            <span class="block text-lg font-medium mb-2 ml-2">Link:</span>-->
             <div class="my-6 ml-3">
-                <span class="text-lg font-medium">Link:</span> <a @click="copy('rtmp://192:168:0:1:1936/'+showServer+'/'+showId)" class="ml-2 text-lg font-medium text-gray-500 hover:text-gray-400 transition cursor-pointer" title="copy">{{'rtmp://192:168:0:1:1936/'+showServer+'/'+showId}}</a>
+                <span class="text-lg font-medium">Link:</span> <a @click="copy('rtmp://'+conf.ip+'/' + conf.server_name + '/'+showServer+'/'+showId)" class="ml-2 text-lg font-medium text-gray-500 hover:text-gray-400 transition cursor-pointer" title="copy">{{'rtmp://'+conf.ip+'/' + conf.server_name + '/'+showServer+'/'+showId}}</a>
 <!--                <div class="w-full flex justify-end mt-3">-->
 <!--                    <CButton @click="modal.link=false" v-bind:color="'gray'" class="px-5 py-2">Close</CButton>-->
 <!--                </div>-->
@@ -510,6 +510,7 @@ export default {
             events: {},
             comments:{},
             clientEvent:{},
+            conf: {},
         }
     },
     setup() {
@@ -636,7 +637,7 @@ export default {
         initPlayer() {
             sldpPlayer = SLDP.init({
                 container: 'player',
-                stream_url: 'rtmp://176.99.135.76:1935/' + this.showServer + '/' + this.showId,
+                stream_url: 'rtmp://'+this.conf.ip+'/' + this.conf.server_name + '/' + this.showId,
                 adaptive_bitrate: {
                     initial_rendition: '240p'
                 },
@@ -769,7 +770,15 @@ export default {
                 console.error('Unable to copy to clipboard', err);
             }
             document.body.removeChild(textArea);
-        }
+        },
+        async getConf(){
+            try {
+                const response = await axios.get('/api/conf');
+                this.conf = response.data;
+            }catch (e){
+                console.log(e);
+            }
+        },
     },
     mounted() {
         let search = window.location.search;
@@ -791,6 +800,7 @@ export default {
         }
         this.getEvents();
         this.getServerName();
+        this.getConf();
     }
 }
 </script>
