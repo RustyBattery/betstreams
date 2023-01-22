@@ -415,7 +415,7 @@
             </button>
 <!--            <span class="block text-lg font-medium mb-2 ml-2">Link:</span>-->
             <div class="my-6 ml-3">
-                <span class="text-lg font-medium">Link:</span> <a @click="copy('rtmp://'+conf.ip+'/' + conf.server_name + '/'+showServer+'/'+showId)" class="ml-2 text-lg font-medium text-gray-500 hover:text-gray-400 transition cursor-pointer" title="copy">{{'rtmp://'+conf.ip+'/' + conf.server_name + '/'+showServer+'/'+showId}}</a>
+                <span class="text-lg font-medium">Link:</span> <a @click="copy('rtmp://'+conf.ip+'/' + conf.server_name + '/'+showId)" class="ml-2 text-lg font-medium text-gray-500 hover:text-gray-400 transition cursor-pointer" title="copy">{{'rtmp://'+conf.ip+'/' + conf.server_name +'/'+showId}}</a>
 <!--                <div class="w-full flex justify-end mt-3">-->
 <!--                    <CButton @click="modal.link=false" v-bind:color="'gray'" class="px-5 py-2">Close</CButton>-->
 <!--                </div>-->
