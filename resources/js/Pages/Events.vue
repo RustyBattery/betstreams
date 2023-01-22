@@ -637,7 +637,7 @@ export default {
         initPlayer() {
             sldpPlayer = SLDP.init({
                 container: 'player',
-                stream_url: 'rtmp://'+this.conf.ip+'/' + this.conf.server_name + '/' + this.showId,
+                stream_url: 'ws://'+this.conf.ip+'/' + this.conf.server_name + '/' + this.showId,
                 adaptive_bitrate: {
                     initial_rendition: '240p'
                 },
