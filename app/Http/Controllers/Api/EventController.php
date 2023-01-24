@@ -319,7 +319,7 @@ class EventController extends BaseController
 //        $events = Event::query()->count();
 //        $check_events = $user->statistics()->count();
 //        return $events-$check_events;
-        $events = Event::query()->where('created_at', '>', Carbon::now()->subMinutes(5))->count();
+        $events = Event::query()->where('created_at', '>', Carbon::now()->subSeconds(15))->count();
         return $events;
     }
 

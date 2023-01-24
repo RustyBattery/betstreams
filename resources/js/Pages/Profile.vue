@@ -16,7 +16,7 @@
         </form>
         <div v-if="user.token" class="mb-6">
             <span class="block mb-2 text-lg font-medium text-gray-900">
-                Your API token: <span @click="copy(this.user.token)" class="text-md font-medium text-gray-600 transition hover:text-gray-500 cursor-pointer ml-3" title="Hi! I'm tooltip">{{this.user.token}}</span>
+                Your API token: <span @click="copy(this.user.token)" class="text-md font-medium text-gray-600 transition hover:text-gray-500 cursor-pointer ml-3" title="copy">{{this.user.token}}</span>
             </span>
         </div>
         <div class="mb-6">

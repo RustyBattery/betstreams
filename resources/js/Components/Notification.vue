@@ -59,7 +59,7 @@ export default {
         this.checkNew();
         setInterval(
             () => this.checkNew(),
-            300000
+            15000
         );
     }
 }

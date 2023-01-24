@@ -75,7 +75,7 @@
                 <th class="border border-slate-300 py-1 text-xs">Event</th>
 <!--                <th class="border border-slate-300 py-1 text-xs">Date</th>-->
                 <th class="border border-slate-300 py-1 text-xs">Start</th>
-                <th class="border border-slate-300 py-1 text-xs">End</th>
+<!--                <th class="border border-slate-300 py-1 text-xs">End</th>-->
                 <th class="border border-slate-300 py-1 text-xs max-w-24">Status</th>
                 <th class="border border-slate-300 py-1 text-xs">Resolution</th>
                 <th class="border border-slate-300 py-1 text-xs">Comment</th>
@@ -96,7 +96,7 @@
                 <!--                <td class="border border-slate-300 text-xs">{{ stream.date }}</td>-->
 <!--                <td class="border border-slate-300 text-xs">{{ formatDate(new Date(stream.date)) }}</td>-->
                 <td class="border border-slate-300 text-xs">{{ formatDate(new Date(stream.date))+' '+stream.start_time }}</td>
-                <td class="border border-slate-300 text-xs">{{ formatDate(new Date(stream.date))+' '+stream.end_time }}</td>
+<!--                <td class="border border-slate-300 text-xs">{{ formatDate(new Date(stream.date))+' '+stream.end_time }}</td>-->
                 <td v-if="!is_admin" class="border border-slate-300 text-xs">{{ stream.status }}</td>
                 <td v-if="is_admin" @change="editStream=stream; updateEvent(); getEvents();" class="border border-slate-300 text-xs">
                     <select v-model="stream.status"
@@ -114,9 +114,9 @@
                         <textarea :id="'commentChange'+stream.id" rows="1" v-model="stream.comment"
                                   class="w-full block pb-1 text-xs bg-white/[.5] rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 hidden">{{ stream.comment }}</textarea>
                         <span :id="'comment'+stream.id" class="w-full">{{ stream.comment }}</span>
-                        <i @click="saveComment(stream.id, stream)" :id="'commentBtnSave'+stream.id"
+                        <i @click="saveComment(stream.id, stream)" :id="'commentBtnSave'+stream.id" title="save"
                            class="block fa-solid fa-check hover:text-gray-500 transition cursor-pointer hidden"></i>
-                        <i @click="editComment(stream.id)" :id="'commentBtn'+stream.id"
+                        <i @click="editComment(stream.id)" :id="'commentBtn'+stream.id" title="edit"
                            class="block fa-solid fa-pencil hover:text-gray-500 transition cursor-pointer"></i>
                     </div>
                 </td>
@@ -125,9 +125,9 @@
                         <textarea :id="'commentClientChange'+stream.id" rows="1" v-model="stream.client_comment"
                                   class="w-full block pb-1 text-xs bg-white/[.5] rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 hidden">{{ stream.client_comment }}</textarea>
                         <span :id="'commentClient'+stream.id" class="w-full">{{ stream.client_comment }}</span>
-                        <i @click="saveClientComment(stream.id, stream)" :id="'commentClientBtnSave'+stream.id"
+                        <i @click="saveClientComment(stream.id, stream)" :id="'commentClientBtnSave'+stream.id" title="save"
                            class="block fa-solid fa-check hover:text-gray-500 transition cursor-pointer hidden"></i>
-                        <i @click="editClientComment(stream.id, stream)" :id="'commentClientBtn'+stream.id"
+                        <i @click="editClientComment(stream.id, stream)" :id="'commentClientBtn'+stream.id" title="edit"
                            class="block fa-solid fa-pencil hover:text-gray-500 transition cursor-pointer"></i>
                     </div>
                 </td>
@@ -136,9 +136,9 @@
                         <textarea :id="'idClientChange'+stream.id" rows="1" v-model="stream.personal_id"
                                   class="w-full block pb-1 text-xs bg-white/[.5] rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 hidden">{{ stream.personal_id }}</textarea>
                         <span :id="'idClient'+stream.id" class="w-full">{{ stream.personal_id }}</span>
-                        <i @click="saveClientId(stream.id, stream)" :id="'idClientBtnSave'+stream.id"
+                        <i @click="saveClientId(stream.id, stream)" :id="'idClientBtnSave'+stream.id" title="save"
                            class="block fa-solid fa-check hover:text-gray-500 transition cursor-pointer hidden"></i>
-                        <i @click="editClientId(stream.id, stream)" :id="'idClientBtn'+stream.id"
+                        <i @click="editClientId(stream.id, stream)" :id="'idClientBtn'+stream.id" title="edit"
                            class="block fa-solid fa-pencil hover:text-gray-500 transition cursor-pointer"></i>
                     </div>
                 </td>
@@ -146,22 +146,28 @@
                 <td v-if="is_admin" class="border border-slate-300 text-xs">{{ stream.stream_id }}</td>
                 <td class="border border-slate-300 text-xs">
                     <div class="flex justify-around px-1">
-                        <i v-if="!is_admin" @click="showLink(stream);clientEvent = {taken: true, event_id: stream.id}; updateClientEvent()"
+                        <i v-if="!is_admin" title="get link"
+                           @click="showLink(stream); clientEvent = {taken: true, event_id: stream.id}; updateClientEvent()"
                            class="link--- fa-solid fa-link mr-1 hover:text-gray-500 transition cursor-pointer"></i>
-                        <i v-if="is_admin || stream.status==='LIVE'"
+                        <i v-if="is_admin || stream.status==='LIVE'" title="preview"
                            @click="previewPlay(this.server_name, stream.stream_id)"
                            class="play--- fa-solid fa-play mr-1 hover:text-gray-500 transition cursor-pointer"></i>
-                        <i v-if="!is_admin" @click="clientEvent = {trashcan: (Number(stream.trashcan)+1)%2, event_id: stream.id}; updateClientEvent()"
+                        <i v-if="!is_admin" title="add to trashcan"
+                           @click="clientEvent = {trashcan: (Number(stream.trashcan)+1)%2, event_id: stream.id}; updateClientEvent()"
                            class="trashcan--- fa-solid fa-trash-can mr-1 hover:text-gray-500 transition cursor-pointer">
 <!--                           :class="{'fa-trash-can': stream.trashcan, 'fa-trash-can': !stream.trashcan}"-->
                         </i>
-                        <i v-if="!is_admin && stream.statistics!==0" @click="clientEvent = {statistics: false, event_id: stream.id}; updateClientEvent()"
+                        <i v-if="!is_admin && stream.statistics!==0" title="remove from statistics"
+                           @click="clientEvent = {statistics: false, event_id: stream.id}; updateClientEvent()"
                            class="statistic--- fa-solid fa-xmark hover:text-gray-500 transition cursor-pointer"></i>
-                        <i v-if="is_admin" @click="getComments(stream.id)"
+                        <i v-if="is_admin" title="client comments"
+                           @click="getComments(stream.id)"
                            class="comments--- fa-solid fa-comment mr-1 hover:text-gray-500 transition cursor-pointer"></i>
-                        <i v-if="is_admin" @click="showStreamEdit(stream)"
+                        <i v-if="is_admin" title="edit"
+                           @click="showStreamEdit(stream)"
                            class="edit--- fa-solid fa-pencil mr-1 hover:text-gray-500 transition cursor-pointer"></i>
-                        <i v-if="is_admin" @click="deleteEvent(stream)"
+                        <i v-if="is_admin" title="delete"
+                           @click="deleteEvent(stream)"
                            class="delete--- fa-solid fa-xmark hover:text-gray-500 transition cursor-pointer"></i>
                     </div>
                 </td>
@@ -510,7 +516,11 @@ export default {
             events: {},
             comments:{},
             clientEvent:{},
-            conf: {},
+            conf: {
+                ip: "",
+                server_name: "",
+            },
+            sldpPlayer: {},
         }
     },
     setup() {
@@ -634,23 +644,36 @@ export default {
             history.pushState(null, null, newUrl);
             this.getEvents();
         },
+        // initPlayer() {
+        //     sldpPlayer = SLDP.init({
+        //         container: 'player',
+        //         // stream_url: 'ws://'+this.conf.ip+'/' + this.conf.server_name + '/' + this.showId,
+        //         stream_url: 'ws://176.99.135.20:1935/Bet/123321',
+        //         height: window.innerHeight / 2,
+        //         width: window.innerWidth / 2.5,
+        //         autoplay: true
+        //     });
+        // },
+
         initPlayer() {
-            sldpPlayer = SLDP.init({
+            // this.sldpPlayer.destroy();
+            let url = "ws://"+String(this.conf.ip)+"/"+String(this.conf.server_name)+"/"+String(this.showId);
+            console.log(url);
+            this.sldpPlayer = SLDP.init({
                 container: 'player',
-                stream_url: 'ws://'+this.conf.ip+'/' + this.conf.server_name + '/' + this.showId,
-                adaptive_bitrate: {
-                    initial_rendition: '240p'
-                },
-                buffering: 500,
-                autoplay: false,
+                // stream_url: "ws://"+"176.99.135.20:1935"+"/"+"Bet"+"/"+"123321",
+                stream_url: "ws://"+String(this.conf.ip)+"/"+String(this.conf.server_name)+"/"+String(this.showId),
                 height: window.innerHeight / 2,
-                width: window.innerWidth / 2.5
-            })
+                width: window.innerWidth / 2.5,
+                autoplay: true,
+                muted: true,
+            });
         },
+
         previewPlay(server, id) {
             this.showServer = server;
             this.showId = id;
-            sldpPlayer.destroy();
+            this.sldpPlayer.destroy();
             this.initPlayer();
             this.modal.preview = true;
         },
@@ -775,6 +798,7 @@ export default {
             try {
                 const response = await axios.get('/api/conf');
                 this.conf = response.data;
+                this.initPlayer();
             }catch (e){
                 console.log(e);
             }
@@ -791,8 +815,7 @@ export default {
             this.sort = sort;
             this.filter_date = filter_date;
         }
-
-        this.initPlayer();
+        this.getConf();
         if(this.authUser.role === 'client'){
             this.is_admin = false;
         }else {
@@ -800,7 +823,6 @@ export default {
         }
         this.getEvents();
         this.getServerName();
-        this.getConf();
     }
 }
 </script>

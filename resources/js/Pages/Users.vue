@@ -25,7 +25,7 @@
                 <td class="border border-slate-300 p-1">{{ user.username }}</td>
                 <td class="border border-slate-300 p-1 ">{{ user.role }}</td>
                 <td v-if="user.token" class="overflow-ellipsis overflow-hidden border border-slate-300 text-center cursor-pointer hover:text-gray-500 transition">
-                    <span @click="copy(user.token)" class="font-medium overflow-ellipsis">{{ user.token }}</span>
+                    <span @click="copy(user.token)" class="font-medium overflow-ellipsis" title="copy">{{ user.token }}</span>
                 </td>
                 <td v-else class="border border-slate-300 p-1 text-center">
                     <button type="submit" @click.prevent="editUser=user; editUser.can_use_api=1; updateUser()"
