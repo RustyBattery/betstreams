@@ -12,6 +12,11 @@
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='All', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='All'}">
                     All
                 </button>
+                <button type="button" @click="add_filter('Active')"
+                        :disabled="filter==='Active'"
+                        :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='Active', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='Active'}">
+                    Active
+                </button>
                 <button type="button" @click="add_filter('LIVE')"
                         :disabled="filter==='LIVE'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='LIVE', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='LIVE'}">

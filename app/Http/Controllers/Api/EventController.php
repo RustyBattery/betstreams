@@ -181,6 +181,41 @@ class EventController extends BaseController
             return $events;
         }
 
+        if($data['filter'] == 'Active'){
+            $events = Event::query()->orderBy($data['sort'])->where('status', '<>', 'FINISHED')->orderBy('start_time')->get();
+            $events = collect($events)->map(function ($event) use ($user){
+                $user_events = UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->first();
+                $event = [
+                    "id"=>$event->id,
+                    "sport_id"=>$event->sport_id,
+                    "sport"=>Sport::query()->findOrFail($event->sport_id)->name,
+                    "tournament"=>$event->tournament,
+                    "event"=>$event->event,
+                    "date"=>$event->date,
+                    "start_time"=>explode(':', $event->start_time)[0].':'.explode(':', $event->start_time)[1],
+                    "end_time"=>explode(':', $event->end_time)[0].':'.explode(':', $event->end_time)[1],
+                    "comment"=>$event->comment,
+                    "status"=>$event->status,
+                    "resolution"=>$event->resolution,
+                    "server_id"=>$event->server_id,
+                    "stream_id"=>$event->stream_id,
+                    "source"=>$event->source,
+                    "client_comment"=>$user_events->comment ?? null,
+                    "add_comment"=>$user_events->add_comment ?? null,
+                    "personal_id"=>$user_events->personal_id ?? null,
+                    "trashcan"=>$user_events->trashcan ?? null,
+                    "taken"=>$user_events->taken ?? null,
+                    "statistics"=>$user_events->statistics ?? null,
+                    "new" => UserEvent::query()->where('user_id', $user->id)->where('event_id', $event->id)->count() >0 ? false : true,
+                    "recently"=> Carbon::create($event->created_at) > Carbon::now()->subHour() ? 1 : 0,
+                ];
+                return $event;
+            })->filter(function ($event) use($user){
+                return !$event['trashcan'];
+            })->chunk($size);
+            return $events;
+        }
+
         if(isset($data['filter_date']) && $data['filter']=='Date' && $data['filter_date']){
             $events = Event::query()->where('date', $data['filter_date'])->orderBy($data['sort'])->orderBy('start_time')->get();
             $events = collect($events)->map(function ($event) use ($user){
