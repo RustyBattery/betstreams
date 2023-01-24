@@ -66,8 +66,8 @@ export default {
         async editSettings() {
             try {
                 const response = await axios.post('api/conf/edit', this.settings);
-                // window.location.href = '/settings';
-                this.getSettings();
+                window.location.href = '/settings';
+                // this.getSettings();
             } catch (e) {
                 if (e.response.status < 500) {
                     alert(e.response.data.message);
