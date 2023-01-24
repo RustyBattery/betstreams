@@ -7,47 +7,47 @@
         </div>
         <div class="---filter--- mb-3 flex justify-between">
             <div class="flex w-full items-center">
-                <button type="button" @click="add_filter('All')"
+                <button type="button" @click="add_filter('All'); currentPage = 1; updateURL()"
                         :disabled="filter==='All'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='All', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='All'}">
                     All
                 </button>
-                <button type="button" @click="add_filter('Active')"
+                <button type="button" @click="add_filter('Active'); currentPage = 1; updateURL()"
                         :disabled="filter==='Active'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='Active', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='Active'}">
                     Active
                 </button>
-                <button type="button" @click="add_filter('LIVE')"
+                <button type="button" @click="add_filter('LIVE'); currentPage = 1; updateURL()"
                         :disabled="filter==='LIVE'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='LIVE', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='LIVE'}">
                     Live
                 </button>
-                <button type="button" @click="add_filter('FINISHED')"
+                <button type="button" @click="add_filter('FINISHED'); currentPage = 1; updateURL()"
                         :disabled="filter==='FINISHED'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='FINISHED', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='FINISHED'}">
                     Finished
                 </button>
-                <button type="button" @click="add_filter('SCHEDULED')"
+                <button type="button" @click="add_filter('SCHEDULED'); currentPage = 1; updateURL()"
                         :disabled="filter==='SCHEDULED'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='SCHEDULED', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='SCHEDULED'}">
                     Scheduled
                 </button>
-                <button type="button" @click="add_filter('CANCELED')"
+                <button type="button" @click="add_filter('CANCELED'); currentPage = 1; updateURL()"
                         :disabled="filter==='CANCELED'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='CANCELED', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='CANCELED'}">
                     Сanceled
                 </button>
-                <button v-if="!is_admin" type="button" @click="add_filter('New')"
+                <button v-if="!is_admin" type="button" @click="add_filter('New'); currentPage = 1; updateURL()"
                         :disabled="filter==='New'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='New', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='New'}">
                     New
                 </button>
-                <button type="button" @click="add_filter('Today')"
+                <button type="button" @click="add_filter('Today'); currentPage = 1; updateURL()"
                         :disabled="filter==='Date'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='Today', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='Today'}">
                     Today
                 </button>
-                <button v-if="!is_admin" type="button" @click="add_filter('Trashcan')"
+                <button v-if="!is_admin" type="button" @click="add_filter('Trashcan'); currentPage = 1; updateURL()"
                         :disabled="filter==='Trashcan'"
                         :class="{'mr-3 px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded cursor-default': filter==='Trashcan', 'mr-3 px-3 py-1 text-xs font-medium text-center text-gray-900 bg-gray-100 rounded border border-gray-300 transition hover:bg-blue-50 hover:text-blue-700':filter!=='Trashcan'}">
                     Trashcan
@@ -185,7 +185,7 @@
                 <nav aria-label="Page navigation example">
                     <ul class="flex list-style-none">
                         <li v-if="currentPage>1" class="page-item">
-                            <a @click="currentPage--; streams= events[currentPage-1]"
+                            <a @click="currentPage--; streams= events[currentPage-1]; updateURL()"
                                class="cursor-pointer page-link relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded text-gray-800 hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
                                aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
@@ -196,14 +196,14 @@
                                class="page-link relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded text-gray-800 cursor-default">
                                 ...
                             </a>
-                            <a v-else @click="currentPage=i; streams=events[currentPage-1]"
+                            <a v-else @click="currentPage=i; streams=events[currentPage-1]; updateURL()"
                                class="cursor-pointer page-link relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded  hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
                                :class="{'bg-blue-600 text-white hover:text-white hover:bg-blue-600 shadow-md focus:shadow-md': i===currentPage, 'hidden': i>1 && i<totalPage && (i<currentPage-1 || i>currentPage+1)}">
                                 {{ i }}
                             </a>
                         </li>
                         <li v-if="currentPage<totalPage" class="page-item">
-                            <a @click="currentPage++; streams= events[currentPage-1]"
+                            <a @click="currentPage++; streams= events[currentPage-1]; updateURL()"
                                class="cursor-pointer page-link relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded text-gray-800 hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
                                aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
@@ -485,8 +485,8 @@ export default {
             filter_date: '2023-01-01',
             date: '2023-01-01',
 
-            currentPage: 0,
-            totalPage: 0,
+            currentPage: 1,
+            totalPage: 1,
 
             showServer: '',
             showId: '',
@@ -645,7 +645,7 @@ export default {
         },
         updateURL() {
             let baseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            let newUrl = baseUrl + '?filter=' + this.filter + '&sort=' + this.sort + '&date=' + this.filter_date;
+            let newUrl = baseUrl + '?filter=' + this.filter + '&sort=' + this.sort + '&date=' + this.filter_date + '&page=' + this.currentPage;
             history.pushState(null, null, newUrl);
             this.getEvents();
         },
@@ -708,11 +708,20 @@ export default {
         },
 
         async getEvents(){
+            // console.log('get');
             try {
                 const response = await axios.post('api/events', { filter: this.filter, sort:this.sort, filter_date:this.filter_date });
                 this.events = response.data;
                 this.totalPage = response.data.length;
-                this.currentPage = 1;
+                let search = window.location.search;
+                if(search){
+                    search = search.split('&');
+                    let page = search[3].split('=')[1];
+                    if(!page){
+                        this.currentPage = 1;
+                    }
+                    // this.currentPage = page;
+                } else this.currentPage = 1;
                 this.streams = this.events[this.currentPage - 1];
             }catch (e){
                 console.log(e);
@@ -816,9 +825,12 @@ export default {
             let filter = search[0].split('=')[1];
             let sort = search[1].split('=')[1];
             let filter_date = search[2].split('=')[1];
+            let page = search[3].split('=')[1];
+            console.log(page);
             this.filter = filter;
             this.sort = sort;
             this.filter_date = filter_date;
+            // this.currentPage = page;
         }
         this.getConf();
         if(this.authUser.role === 'client'){
@@ -828,6 +840,13 @@ export default {
         }
         this.getEvents();
         this.getServerName();
+        setInterval(
+            () => {
+                this.getEvents();
+                // console.log('ok');
+            },
+            15000
+        );
     }
 }
 </script>
