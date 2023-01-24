@@ -14,6 +14,9 @@
                             <li v-if="authUser.role === 'admin'" class="mx-2">
                                 <a href="/users" class="block p-2 text-gray-700 hover:text-blue-700 transition" :class="[url ==='/users' ? 'text-blue-700' : '']">Users</a>
                             </li>
+                            <li v-if="authUser.role === 'admin'" class="mx-2">
+                                <a href="/settings" class="block p-2 text-gray-700 hover:text-blue-700 transition" :class="[url ==='/settings' ? 'text-blue-700' : '']">Settings</a>
+                            </li>
                             <li v-if="authUser.role === 'client'" class="mx-2">
                                 <a href="/profile" class="block p-2 text-gray-700 hover:text-blue-700 transition" :class="[url ==='/profile' ? 'text-blue-700' : '']">Profile</a>
                             </li>

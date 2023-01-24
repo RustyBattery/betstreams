@@ -12,26 +12,6 @@
 <body class="h-screen">
     <div class="" id="player2"></div>
     @inertia
-
-{{--    <script>--}}
-{{--        document.addEventListener('DOMContentLoaded', initPlayer);--}}
-{{--        var sldpPlayer;--}}
-
-{{--        function initPlayer() {--}}
-{{--            sldpPlayer = SLDP.init({--}}
-{{--                container: 'player2',--}}
-{{--                stream_url: "ws://176.99.135.20:8081/Bet/123321",--}}
-{{--                height: 360,--}}
-{{--                width: 640,--}}
-{{--                autoplay: true--}}
-{{--            });--}}
-{{--        }--}}
-
-{{--        function removePlayer() {--}}
-{{--            sldpPlayer.destroy()--}}
-{{--        }--}}
-{{--    </script>--}}
 </body>
 </html>
-{{--<script src="node_modules/flowbite/dist/flowbite.js"></script>--}}
 
