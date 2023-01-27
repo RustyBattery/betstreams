@@ -302,7 +302,7 @@ class EventController extends BaseController
             'status' => ['required', 'in:LIVE,FINISHED,SCHEDULED,CANCELED'],
             'resolution' => ['required', 'in:SD,HD,FullHD'],
             'server_id' => ['required', 'string'],
-            'stream_id' => ['nullable', 'numeric', 'min:10000', 'max:100000000'],
+            'stream_id' => ['nullable', 'numeric'],
             'source' => ['nullable', 'string'],
         ]);
         if(!$data['stream_id']){
@@ -334,7 +334,7 @@ class EventController extends BaseController
             'status' => ['required', 'in:LIVE,FINISHED,SCHEDULED,CANCELED'],
             'resolution' => ['required', 'in:SD,HD,FullHD'],
             'server_id' => ['required', 'string'],
-            'stream_id' => ['required', 'numeric', 'min:10000', 'max:100000000'],
+            'stream_id' => ['required', 'numeric'],
             'source' => ['nullable', 'string'],
         ]);
         $event = Event::query()->updateOrCreate(['id'=>$data['id']], $data);
