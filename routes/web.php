@@ -33,4 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/settings', function (){
         return Inertia::render('Settings', ['authUser'=> auth('sanctum')->user(), 'app_name' => env('APP_NAME')]);
     });
+    Route::get('/monitoring', function (){
+        return Inertia::render('Monitoring', ['authUser'=> auth('sanctum')->user(), 'app_name' => env('APP_NAME')]);
+    });
 });

@@ -11,6 +11,9 @@
                             <li class="mx-2">
                                 <a href="/" class="block p-2 text-gray-700 hover:text-blue-700 transition" :class="[url ==='/' ? 'text-blue-700' : '']">Streams</a>
                             </li>
+                            <li v-if="authUser.role !== 'client'" class="mx-2">
+                                <a href="/monitoring" class="block p-2 text-gray-700 hover:text-blue-700 transition" :class="[url ==='/monitoring' ? 'text-blue-700' : '']">Monitoring</a>
+                            </li>
                             <li v-if="authUser.role === 'admin'" class="mx-2">
                                 <a href="/users" class="block p-2 text-gray-700 hover:text-blue-700 transition" :class="[url ==='/users' ? 'text-blue-700' : '']">Users</a>
                             </li>
