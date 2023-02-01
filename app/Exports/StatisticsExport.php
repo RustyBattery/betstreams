@@ -33,87 +33,178 @@ class StatisticsExport implements FromCollection, ShouldAutoSize
         $result = [];
         $result = collect($result);
         $users = User::all();
-        $result->push(["start date", $this->start_date, "", "end date", $this->end_date]);
+
+        $result->push(["start date", $this->start_date]);
+        $result->push(["end date", $this->end_date]);
         $result->push([""]);
+
         foreach ($users as $user){
+            $count_take = 0;
+            $count_comment = 0;
+
             $result->push(["", $user->username]);
+
             if($this->taken){
-                $count_taken = UserEvent::query()->where('user_id', $user->id)->where('taken', '>=', $this->start_date)->where('taken', '<=', $this->end_date)->count();
-                $result->push(["get link", $count_taken]);
+                $result->push(["Taken without comment"]);
+
+                $countSD = UserEvent::query()->join('events', 'events.id', '=', 'user_events.event_id')
+                    ->where('user_events.user_id', $user->id)
+                    ->where('user_events.taken', '>=', $this->start_date)
+                    ->where('user_events.taken', '<=', $this->end_date)
+                    ->whereNull('user_events.add_comment')
+                    ->where('resolution', 'SD')->count();
+                $result->push(["SD", $countSD]);
+
+                $countHD = UserEvent::query()->join('events', 'events.id', '=', 'user_events.event_id')
+                    ->where('user_events.user_id', $user->id)
+                    ->where('user_events.taken', '>=', $this->start_date)
+                    ->where('user_events.taken', '<=', $this->end_date)
+                    ->whereNull('user_events.add_comment')
+                    ->where('resolution', 'HD')->count();
+                $result->push(["HD", $countHD]);
+
+                $countFullHD = UserEvent::query()->join('events', 'events.id', '=', 'user_events.event_id')
+                    ->where('user_events.user_id', $user->id)
+                    ->where('user_events.taken', '>=', $this->start_date)
+                    ->where('user_events.taken', '<=', $this->end_date)
+                    ->whereNull('user_events.add_comment')
+                    ->where('resolution', 'FullHD')->count();
+                $result->push(["FullHD", $countFullHD]);
+
+                $count_take = $countSD + $countHD + $countFullHD;
             }
+            $result->push([""]);
 
             if($this->comment){
-                $count_comment = UserEvent::query()->where('user_id', $user->id)->where('add_comment', '>=', $this->start_date)->where('add_comment', '<=', $this->end_date)->count();
-                $result->push(["comment", $count_comment]);
-            }
+                $result->push(["Taken with comment"]);
 
-            if($this->taken && $count_taken || $this->comment && $count_comment){
+                $countSD = UserEvent::query()->join('events', 'events.id', '=', 'user_events.event_id')
+                    ->where('user_events.user_id', $user->id)
+                    ->where('user_events.taken', '>=', $this->start_date)
+                    ->where('user_events.taken', '<=', $this->end_date)
+                    ->whereNotNull('user_events.add_comment')
+                    ->where('resolution', 'SD')->count();
+                $result->push(["SD", $countSD]);
+
+                $countHD = UserEvent::query()->join('events', 'events.id', '=', 'user_events.event_id')
+                    ->where('user_events.user_id', $user->id)
+                    ->where('user_events.taken', '>=', $this->start_date)
+                    ->where('user_events.taken', '<=', $this->end_date)
+                    ->whereNotNull('user_events.add_comment')
+                    ->where('resolution', 'HD')->count();
+                $result->push(["HD", $countHD]);
+
+                $countFullHD = UserEvent::query()->join('events', 'events.id', '=', 'user_events.event_id')
+                    ->where('user_events.user_id', $user->id)
+                    ->where('user_events.taken', '>=', $this->start_date)
+                    ->where('user_events.taken', '<=', $this->end_date)
+                    ->whereNotNull('user_events.add_comment')
+                    ->where('resolution', 'FullHD')->count();
+                $result->push(["FullHD", $countFullHD]);
+
+                $count_comment = $countSD + $countHD + $countFullHD;
+            }
+            $result->push([""]);
+
+            if($this->taken && $count_take){
                 $result->push([
-                    "",
+                    "without comment",
                     "sport",
                     "tournament",
                     "event",
                     "date",
                     "start time",
-                    "end time",
+                    "resolution",
+//                    "end time",
                     "status",
                     "server id",
                     "stream id",
                     "comment",
-                    "souce url",
-                    "client comment",
-                    "add comment",
+                    "source url",
                     "get link",
+//                    "client comment",
+//                    "add comment",
                 ]);
-            }
 
-            if($this->taken && $count_taken){
-                $user_taken_events = UserEvent::query()->where('user_id', $user->id)->where('user_id', $user->id)->where('taken', '>=', $this->start_date)->where('taken', '<=', $this->end_date)->get();
+
+                $user_taken_events = UserEvent::query()->where('user_id', $user->id)
+                    ->where('user_id', $user->id)
+                    ->where('taken', '>=', $this->start_date)
+                    ->where('taken', '<=', $this->end_date)
+                    ->whereNull('add_comment')->get();
                 foreach ($user_taken_events as $user_event){
                     $event = Event::query()->findOrFail($user_event->event_id);
                     $sport = Sport::query()->findOrFail($event->sport_id);
                     $result->push([
-                        "taken",
+                        "",
                         $sport->name,
                         $event->tournament,
                         $event->event,
                         $event->date,
                         $event->start_time,
-                        $event->end_time,
+                        $event->resolution,
+//                        $event->end_time,
                         $event->status,
                         $event->server_id,
                         $event->stream_id,
                         $event->comment,
-                        $event->souce,
-                        $user_event->comment,
-                        $user_event->add_comment,
-                        $user_event->taken]);
+                        $event->source,
+                        $user_event->taken,
+//                        $user_event->comment,
+//                        $user_event->add_comment,
+                        ]);
                 }
                 $result->push([""]);
             }
 
             if($this->comment && $count_comment){
-                $user_comment_events = UserEvent::query()->where('user_id', $user->id)->where('user_id', $user->id)->where('add_comment', '>=', $this->start_date)->where('add_comment', '<=', $this->end_date)->get();
+                $result->push([
+                    "without comment",
+                    "sport",
+                    "tournament",
+                    "event",
+                    "date",
+                    "start time",
+                    "resolution",
+//                    "end time",
+                    "status",
+                    "server id",
+                    "stream id",
+                    "comment",
+                    "source url",
+                    "get link",
+                    "client comment",
+                    "add comment",
+                ]);
+
+
+                $user_comment_events = UserEvent::query()->where('user_id', $user->id)
+                    ->where('user_id', $user->id)
+                    ->where('taken', '>=', $this->start_date)
+                    ->where('taken', '<=', $this->end_date)
+                    ->where('add_comment', '>=', $this->start_date)
+                    ->where('add_comment', '<=', $this->end_date)->get();
                 foreach ($user_comment_events as $user_event){
                     $event = Event::query()->where('id', $user_event->event_id)->first();
                     if($event){
                         $sport = Sport::query()->where('id', $event->sport_id)->first();
                         $result->push([
-                            "comment",
+                            "",
                             $sport->name,
                             $event->tournament,
                             $event->event,
                             $event->date,
                             $event->start_time,
-                            $event->end_time,
+                            $event->resolution,
+//                            $event->end_time,
                             $event->status,
                             $event->server_id,
                             $event->stream_id,
                             $event->comment,
-                            $event->souce,
+                            $event->source,
+                            $user_event->taken,
                             $user_event->comment,
-                            $user_event->add_comment,
-                            $user_event->taken]);
+                            $user_event->add_comment]);
                     }
                 }
             }
