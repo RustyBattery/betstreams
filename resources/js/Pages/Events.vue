@@ -216,16 +216,16 @@
     </div>
 
     <div class="modal-windows">
-        <vue-final-modal v-model="modal.preview" classes="flex justify-center items-center"
+        <vue-final-modal v-model="modal.preview" :click-to-close="false" classes="flex justify-center items-center"
                          content-class="w-auto relative flex flex-col max-h-full mx-4 p-4 border rounded bg-white">
-            <button class="modal__close" @click="modal.preview=false">
+            <button class="modal__close" @click="modal.preview=false; sldpPlayer.destroy()">
                 <i class="fa-solid fa-xmark text-2xl text-gray-900 hover:text-gray-600 transition"></i>
             </button>
             <span class="block text-lg font-medium mb-2 ml-2">Preview</span>
             <div class="">
                 <div id="player"></div>
                 <div class="w-full flex justify-end mt-3">
-                    <CButton @click="modal.preview=false" v-bind:color="'gray'" class="px-5 py-2">Close</CButton>
+                    <CButton @click="modal.preview=false; sldpPlayer.destroy()" v-bind:color="'gray'" class="px-5 py-2">Close</CButton>
                 </div>
             </div>
         </vue-final-modal>
