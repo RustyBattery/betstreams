@@ -164,7 +164,10 @@
                         </i>
                         <i v-if="!is_admin && stream.statistics!==0" title="remove from statistics"
                            @click="clientEvent = {statistics: false, event_id: stream.id}; updateClientEvent()"
-                           class="statistic--- fa-solid fa-xmark hover:text-gray-500 transition cursor-pointer"></i>
+                           class="remove-statistic--- fa-solid fa-xmark hover:text-gray-500 transition cursor-pointer"></i>
+                        <i v-if="!is_admin && stream.statistics===0" title="add to statistics"
+                           @click="clientEvent = {statistics: true, event_id: stream.id}; updateClientEvent()"
+                           class="add-statistic--- fa-solid fa-check hover:text-gray-500 transition cursor-pointer"></i>
                         <i v-if="is_admin" title="client comments"
                            @click="getComments(stream.id)"
                            class="comments--- fa-solid fa-comment mr-1 hover:text-gray-500 transition cursor-pointer"></i>
